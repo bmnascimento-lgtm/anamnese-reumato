@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Anamnese Reumatológica</title>
+</head>
+<body>
+
+<h2>Anamnese Reumatológica</h2>
+
+<label>Início:</label>
+<select id="inicio">
+  <option value="súbito">Súbito</option>
+  <option value="insidioso">Insidioso</option>
+</select>
+<br><br>
+
+<label>Tempo de evolução:</label>
+<select id="tempo">
+  <option value="< 6 semanas">Menos de 6 semanas</option>
+  <option value="> 6 semanas">Mais de 6 semanas</option>
+</select>
+<br><br>
+
+<label>Rigidez matinal:</label>
+<select id="rigidez">
+  <option value="< 30 minutos">Menos de 30 minutos</option>
+  <option value="> 1 hora">Mais de 1 hora</option>
+</select>
+<br><br>
+
+<label><input type="checkbox" id="febre"> Febre</label><br>
+<label><input type="checkbox" id="rash"> Rash cutâneo</label><br>
+<label><input type="checkbox" id="raynaud"> Fenômeno de Raynaud</label><br><br>
+
+<button onclick="gerarHDA()">Gerar HDA</button>
+
+<h3>Resultado:</h3>
+<p id="resultado"></p>
+
+<script>
+function gerarHDA() {
+  let inicio = document.getElementById("inicio").value;
+  let tempo = document.getElementById("tempo").value;
+  let rigidez = document.getElementById("rigidez").value;
+
+  let sintomas = [];
+
+  if(document.getElementById("febre").checked) sintomas.push("febre");
+  if(document.getElementById("rash").checked) sintomas.push("rash cutâneo");
+  if(document.getElementById("raynaud").checked) sintomas.push("fenômeno de Raynaud");
+
+  let texto = "Paciente refere quadro de dor articular de início " + inicio +
+              ", com evolução " + tempo +
+              ", apresentando rigidez matinal de " + rigidez + ".";
+
+  if(sintomas.length > 0){
+      texto += " Associado a " + sintomas.join(", ") + ".";
+  } else {
+      texto += " Nega sintomas sistêmicos.";
+  }
+
+  document.getElementById("resultado").innerText = texto;
+}
+</script>
+
+</body>
+</html>
