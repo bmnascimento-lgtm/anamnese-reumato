@@ -1,142 +1,131 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html>
 <head>
-<meta charset="UTF-8">
-<title>Anamnese Reumatológica</title>
-
-<style>
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f6f8;
-    padding: 30px;
-}
-
-.container {
-    background: white;
-    padding: 25px;
-    border-radius: 10px;
-    max-width: 700px;
-    margin: auto;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
-
-h2 {
-    text-align: center;
-}
-
-select, button {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    margin-bottom: 15px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-}
-
-button {
-    background-color: #2c7be5;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #1a68d1;
-}
-
-#resultado {
-    background: #f1f3f5;
-    padding: 15px;
-    border-radius: 6px;
-    min-height: 80px;
-    margin-top: 10px;
-}
-
-.mensagem {
-    color: green;
-    font-weight: bold;
-    margin-top: 10px;
-}
-</style>
-
+  <meta charset="UTF-8">
+  <title>Gerador de HDA - Reumatologia</title>
+  <style>
+    body { font-family: Arial; margin: 40px; max-width: 900px; }
+    h2 { margin-top: 30px; }
+    label { display: block; margin-top: 8px; }
+    textarea { width: 100%; margin-top: 20px; }
+    button { margin-top: 15px; padding: 10px; margin-right: 10px; }
+  </style>
 </head>
+
 <body>
 
-<div class="container">
-<h2>Gerador de Anamnese Reumatológica</h2>
+<h1>Gerador de HDA - Reumatologia</h1>
 
-<label>Início do quadro:</label>
-<select id="inicio">
-  <option value="súbito">Súbito</option>
-  <option value="insidioso">Insidioso</option>
-</select>
+<h2>1️⃣ Queixa Principal</h2>
+<label><input type="checkbox" value="dor articular"> Dor articular</label>
+<label><input type="checkbox" value="edema articular"> Edema articular</label>
+<label><input type="checkbox" value="rigidez matinal"> Rigidez matinal</label>
+<label><input type="checkbox" value="lombalgia"> Lombalgia</label>
+<label><input type="checkbox" value="fraqueza muscular"> Fraqueza muscular</label>
+<label><input type="checkbox" value="mialgia"> Mialgia</label>
+<label><input type="checkbox" value="rash cutâneo"> Rash cutâneo</label>
+<label><input type="checkbox" value="fenômeno de Raynaud"> Fenômeno de Raynaud</label>
 
-<label>Tempo de evolução:</label>
-<select id="tempo">
-  <option value="há menos de 6 semanas">Menos de 6 semanas</option>
-  <option value="há mais de 6 semanas">Mais de 6 semanas</option>
-</select>
+<h2>2️⃣ Características da Dor</h2>
+<label>Duração:
+<select id="duracao">
+<option value="">Selecione</option>
+<option value="há dias">Dias</option>
+<option value="há semanas">Semanas</option>
+<option value="há meses">Meses</option>
+<option value="há anos">Anos</option>
+</select></label>
 
-<label>Rigidez matinal:</label>
+<label>Padrão:
+<select id="padrao">
+<option value="">Selecione</option>
+<option value="padrão inflamatório">Inflamatório</option>
+<option value="padrão mecânico">Mecânico</option>
+<option value="padrão misto">Misto</option>
+</select></label>
+
+<label>Intensidade:
+<select id="intensidade">
+<option value="">Selecione</option>
+<option value="leve">Leve</option>
+<option value="moderada">Moderada</option>
+<option value="intensa">Intensa</option>
+</select></label>
+
+<label>Rigidez matinal:
 <select id="rigidez">
-  <option value="inferior a 30 minutos">Menos de 30 minutos</option>
-  <option value="superior a 1 hora">Mais de 1 hora</option>
-</select>
+<option value="">Selecione</option>
+<option value="menor que 30 minutos"> < 30 min</option>
+<option value="maior que 30 minutos"> > 30 min</option>
+<option value="maior que 1 hora"> > 1h</option>
+</select></label>
 
-<label><input type="checkbox" id="febre"> Febre</label><br>
-<label><input type="checkbox" id="rash"> Rash cutâneo</label><br>
-<label><input type="checkbox" id="raynaud"> Fenômeno de Raynaud</label><br><br>
+<h2>3️⃣ ISDA (Revisão de Sistemas)</h2>
+<label><input type="checkbox" value="febre"> Febre</label>
+<label><input type="checkbox" value="fadiga"> Fadiga</label>
+<label><input type="checkbox" value="perda ponderal"> Perda de peso</label>
+<label><input type="checkbox" value="úlceras orais"> Úlceras orais</label>
+<label><input type="checkbox" value="queda de cabelo"> Queda de cabelo</label>
+<label><input type="checkbox" value="fotossensibilidade"> Fotossensibilidade</label>
+<label><input type="checkbox" value="olho seco"> Olho seco</label>
+<label><input type="checkbox" value="boca seca"> Boca seca</label>
+<label><input type="checkbox" value="dispneia"> Dispneia</label>
+<label><input type="checkbox" value="dor torácica pleurítica"> Dor torácica pleurítica</label>
 
-<button onclick="gerarHDA()">Gerar HDA</button>
+<h2>4️⃣ Exame Físico</h2>
+<label><input type="checkbox" value="artrite em pequenas articulações"> Artrite em pequenas articulações</label>
+<label><input type="checkbox" value="artrite simétrica"> Artrite simétrica</label>
+<label><input type="checkbox" value="limitação de movimento"> Limitação de movimento</label>
+<label><input type="checkbox" value="edema articular ao exame"> Edema ao exame</label>
+<label><input type="checkbox" value="deformidades articulares"> Deformidades</label>
+<label><input type="checkbox" value="força muscular preservada"> Força preservada</label>
+<label><input type="checkbox" value="força muscular reduzida"> Força reduzida</label>
+<label><input type="checkbox" value="rash malar"> Rash malar</label>
+<label><input type="checkbox" value="espessamento cutâneo"> Espessamento cutâneo</label>
 
-<h3>Resultado:</h3>
-<div id="resultado"></div>
+<button onclick="gerarTexto()">Gerar HDA + Conduta</button>
+<button onclick="copiarTexto()">Copiar Texto</button>
 
-<button onclick="copiarTexto()">Copiar texto</button>
-
-<div id="mensagem" class="mensagem"></div>
-
-</div>
+<textarea id="resultado" rows="15"></textarea>
 
 <script>
-function gerarHDA() {
-  let inicio = document.getElementById("inicio").value;
-  let tempo = document.getElementById("tempo").value;
-  let rigidez = document.getElementById("rigidez").value;
+function gerarTexto() {
+  let texto = "HDA:\nPaciente apresenta ";
 
+  let checkboxes = document.querySelectorAll("input[type=checkbox]:checked");
   let sintomas = [];
+  checkboxes.forEach(cb => sintomas.push(cb.value));
 
-  if(document.getElementById("febre").checked) sintomas.push("febre");
-  if(document.getElementById("rash").checked) sintomas.push("rash cutâneo");
-  if(document.getElementById("raynaud").checked) sintomas.push("fenômeno de Raynaud");
-
-  let texto = "Paciente refere quadro de dor articular de início " + inicio +
-              ", com evolução " + tempo +
-              ", apresentando rigidez matinal " + rigidez + ".";
-
-  if(sintomas.length > 0){
-      texto += " Associado a " + sintomas.join(", ") + ".";
-  } else {
-      texto += " Nega sintomas sistêmicos.";
+  if (sintomas.length > 0) {
+    texto += sintomas.join(", ");
   }
 
-  document.getElementById("resultado").innerText = texto;
-  document.getElementById("mensagem").innerText = "";
+  let duracao = document.getElementById("duracao").value;
+  let padrao = document.getElementById("padrao").value;
+  let intensidade = document.getElementById("intensidade").value;
+  let rigidez = document.getElementById("rigidez").value;
+
+  if (duracao) texto += ", " + duracao;
+  if (intensidade) texto += ", dor de intensidade " + intensidade;
+  if (padrao) texto += ", com " + padrao;
+  if (rigidez) texto += ", rigidez matinal " + rigidez;
+
+  texto += ".\n\n";
+
+  texto += "CONDUTA:\n";
+  texto += "- Solicitar exames laboratoriais: hemograma, VHS, PCR, FAN, FR, anti-CCP conforme suspeita.\n";
+  texto += "- Avaliar necessidade de imagem (RX ou USG de articulações).\n";
+  texto += "- Considerar início de AINE para controle sintomático.\n";
+  texto += "- Encaminhar ou discutir com reumatologia.\n";
+
+  document.getElementById("resultado").value = texto;
 }
 
 function copiarTexto() {
-  let texto = document.getElementById("resultado").innerText;
-
-  if(texto.trim() === ""){
-    document.getElementById("mensagem").innerText = "Nada para copiar.";
-    return;
-  }
-
-  navigator.clipboard.writeText(texto).then(function() {
-    document.getElementById("mensagem").innerText = "Texto copiado com sucesso!";
-  }, function(err) {
-    document.getElementById("mensagem").innerText = "Erro ao copiar.";
-  });
+  let texto = document.getElementById("resultado");
+  texto.select();
+  document.execCommand("copy");
+  alert("Texto copiado!");
 }
 </script>
 
