@@ -39,29 +39,17 @@
 
 <script>
 function gerarHDA() {
-  let inicio = document.getElementById("inicio").value;
-  let tempo = document.getElementById("tempo").value;
-  let rigidez = document.getElementById("rigidez").value;
+  function copiarTexto() {
+  let texto = document.getElementById("resultado").innerText;
 
-  let sintomas = [];
-
-  if(document.getElementById("febre").checked) sintomas.push("febre");
-  if(document.getElementById("rash").checked) sintomas.push("rash cutâneo");
-  if(document.getElementById("raynaud").checked) sintomas.push("fenômeno de Raynaud");
-
-  let texto = "Paciente refere quadro de dor articular de início " + inicio +
-              ", com evolução " + tempo +
-              ", apresentando rigidez matinal de " + rigidez + ".";
-
-  if(sintomas.length > 0){
-      texto += " Associado a " + sintomas.join(", ") + ".";
-  } else {
-      texto += " Nega sintomas sistêmicos.";
+  if(texto.trim() === ""){
+    document.getElementById("mensagem").innerText = "Nada para copiar.";
+    return;
   }
 
-  document.getElementById("resultado").innerText = texto;
+  navigator.clipboard.writeText(texto).then(function() {
+    document.getElementById("mensagem").innerText = "Texto copiado com sucesso!";
+  }, function(err) {
+    document.getElementById("mensagem").innerText = "Erro ao copiar.";
+  });
 }
-</script>
-
-</body>
-</html>
