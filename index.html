@@ -1,32 +1,87 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
-  <title>Anamnese Reumatológica</title>
+<meta charset="UTF-8">
+<title>Anamnese Reumatológica</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f6f8;
+    padding: 30px;
+}
+
+.container {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    max-width: 700px;
+    margin: auto;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h2 {
+    text-align: center;
+}
+
+select, button {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+button {
+    background-color: #2c7be5;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #1a68d1;
+}
+
+#resultado {
+    background: #f1f3f5;
+    padding: 15px;
+    border-radius: 6px;
+    min-height: 80px;
+    margin-top: 10px;
+}
+
+.mensagem {
+    color: green;
+    font-weight: bold;
+    margin-top: 10px;
+}
+</style>
+
 </head>
 <body>
 
-<h2>Anamnese Reumatológica</h2>
+<div class="container">
+<h2>Gerador de Anamnese Reumatológica</h2>
 
-<label>Início:</label>
+<label>Início do quadro:</label>
 <select id="inicio">
   <option value="súbito">Súbito</option>
   <option value="insidioso">Insidioso</option>
 </select>
-<br><br>
 
 <label>Tempo de evolução:</label>
 <select id="tempo">
-  <option value="< 6 semanas">Menos de 6 semanas</option>
-  <option value="> 6 semanas">Mais de 6 semanas</option>
+  <option value="há menos de 6 semanas">Menos de 6 semanas</option>
+  <option value="há mais de 6 semanas">Mais de 6 semanas</option>
 </select>
-<br><br>
 
 <label>Rigidez matinal:</label>
 <select id="rigidez">
-  <option value="< 30 minutos">Menos de 30 minutos</option>
-  <option value="> 1 hora">Mais de 1 hora</option>
+  <option value="inferior a 30 minutos">Menos de 30 minutos</option>
+  <option value="superior a 1 hora">Mais de 1 hora</option>
 </select>
-<br><br>
 
 <label><input type="checkbox" id="febre"> Febre</label><br>
 <label><input type="checkbox" id="rash"> Rash cutâneo</label><br>
@@ -35,11 +90,41 @@
 <button onclick="gerarHDA()">Gerar HDA</button>
 
 <h3>Resultado:</h3>
-<p id="resultado"></p>
+<div id="resultado"></div>
+
+<button onclick="copiarTexto()">Copiar texto</button>
+
+<div id="mensagem" class="mensagem"></div>
+
+</div>
 
 <script>
 function gerarHDA() {
-  function copiarTexto() {
+  let inicio = document.getElementById("inicio").value;
+  let tempo = document.getElementById("tempo").value;
+  let rigidez = document.getElementById("rigidez").value;
+
+  let sintomas = [];
+
+  if(document.getElementById("febre").checked) sintomas.push("febre");
+  if(document.getElementById("rash").checked) sintomas.push("rash cutâneo");
+  if(document.getElementById("raynaud").checked) sintomas.push("fenômeno de Raynaud");
+
+  let texto = "Paciente refere quadro de dor articular de início " + inicio +
+              ", com evolução " + tempo +
+              ", apresentando rigidez matinal " + rigidez + ".";
+
+  if(sintomas.length > 0){
+      texto += " Associado a " + sintomas.join(", ") + ".";
+  } else {
+      texto += " Nega sintomas sistêmicos.";
+  }
+
+  document.getElementById("resultado").innerText = texto;
+  document.getElementById("mensagem").innerText = "";
+}
+
+function copiarTexto() {
   let texto = document.getElementById("resultado").innerText;
 
   if(texto.trim() === ""){
@@ -53,3 +138,7 @@ function gerarHDA() {
     document.getElementById("mensagem").innerText = "Erro ao copiar.";
   });
 }
+</script>
+
+</body>
+</html>
