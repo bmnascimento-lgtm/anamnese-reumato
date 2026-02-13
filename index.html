@@ -1,132 +1,169 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>Gerador de HDA - Reumatologia</title>
-  <style>
-    body { font-family: Arial; margin: 40px; max-width: 900px; }
-    h2 { margin-top: 30px; }
-    label { display: block; margin-top: 8px; }
-    textarea { width: 100%; margin-top: 20px; }
-    button { margin-top: 15px; padding: 10px; margin-right: 10px; }
-  </style>
+<meta charset="UTF-8">
+<title>Gerador Reumatologia Pro</title>
+
+<style>
+body { font-family: Arial; margin:40px; max-width:1000px; }
+h2 { margin-top:25px; }
+label { display:block; margin-top:5px; }
+textarea { width:100%; margin-top:20px; }
+button { margin-top:15px; padding:10px; margin-right:10px; }
+.section { border:1px solid #ddd; padding:15px; border-radius:10px; margin-top:20px; }
+</style>
 </head>
 
 <body>
 
-<h1>Gerador de HDA - Reumatologia</h1>
+<h1>Gerador de Evolução - Reumatologia</h1>
 
-<h2>1️⃣ Queixa Principal</h2>
-<label><input type="checkbox" value="dor articular"> Dor articular</label>
-<label><input type="checkbox" value="edema articular"> Edema articular</label>
-<label><input type="checkbox" value="rigidez matinal"> Rigidez matinal</label>
-<label><input type="checkbox" value="lombalgia"> Lombalgia</label>
-<label><input type="checkbox" value="fraqueza muscular"> Fraqueza muscular</label>
-<label><input type="checkbox" value="mialgia"> Mialgia</label>
-<label><input type="checkbox" value="rash cutâneo"> Rash cutâneo</label>
-<label><input type="checkbox" value="fenômeno de Raynaud"> Fenômeno de Raynaud</label>
+<div class="section">
+<h2>QUEIXA / HDA</h2>
 
-<h2>2️⃣ Características da Dor</h2>
-<label>Duração:
-<select id="duracao">
+<label>Tipo:
+<select id="tipo">
 <option value="">Selecione</option>
-<option value="há dias">Dias</option>
-<option value="há semanas">Semanas</option>
-<option value="há meses">Meses</option>
-<option value="há anos">Anos</option>
+<option value="periférico">Periférico</option>
+<option value="axial">Axial</option>
+<option value="misto">Misto</option>
 </select></label>
+
+<h3>Articulações:</h3>
+<label><input type="checkbox" value="mãos"> Mãos</label>
+<label><input type="checkbox" value="punhos"> Punhos</label>
+<label><input type="checkbox" value="joelhos"> Joelhos</label>
+<label><input type="checkbox" value="tornozelos"> Tornozelos</label>
+<label><input type="checkbox" value="pés"> Pés</label>
+<label><input type="checkbox" value="coluna lombar"> Coluna lombar</label>
+<label><input type="checkbox" value="nega dor articular"> Nega dor articular</label>
 
 <label>Padrão:
 <select id="padrao">
 <option value="">Selecione</option>
-<option value="padrão inflamatório">Inflamatório</option>
-<option value="padrão mecânico">Mecânico</option>
-<option value="padrão misto">Misto</option>
-</select></label>
-
-<label>Intensidade:
-<select id="intensidade">
-<option value="">Selecione</option>
-<option value="leve">Leve</option>
-<option value="moderada">Moderada</option>
-<option value="intensa">Intensa</option>
+<option value="inflamatório">Inflamatório</option>
+<option value="mecânico">Mecânico</option>
 </select></label>
 
 <label>Rigidez matinal:
 <select id="rigidez">
 <option value="">Selecione</option>
-<option value="menor que 30 minutos"> < 30 min</option>
-<option value="maior que 30 minutos"> > 30 min</option>
-<option value="maior que 1 hora"> > 1h</option>
+<option value=">1h">Maior que 1h</option>
+<option value="<30min">Menor que 30min</option>
+<option value="nega">Nega</option>
 </select></label>
 
-<h2>3️⃣ ISDA (Revisão de Sistemas)</h2>
+</div>
+
+<div class="section">
+<h2>ISDA</h2>
+
 <label><input type="checkbox" value="febre"> Febre</label>
 <label><input type="checkbox" value="fadiga"> Fadiga</label>
-<label><input type="checkbox" value="perda ponderal"> Perda de peso</label>
-<label><input type="checkbox" value="úlceras orais"> Úlceras orais</label>
-<label><input type="checkbox" value="queda de cabelo"> Queda de cabelo</label>
+<label><input type="checkbox" value="rash malar"> Rash malar</label>
 <label><input type="checkbox" value="fotossensibilidade"> Fotossensibilidade</label>
+<label><input type="checkbox" value="úlcera oral"> Úlcera oral</label>
+<label><input type="checkbox" value="Raynaud"> Fenômeno de Raynaud</label>
 <label><input type="checkbox" value="olho seco"> Olho seco</label>
 <label><input type="checkbox" value="boca seca"> Boca seca</label>
-<label><input type="checkbox" value="dispneia"> Dispneia</label>
-<label><input type="checkbox" value="dor torácica pleurítica"> Dor torácica pleurítica</label>
+<label><input type="checkbox" value="nega sintomas sistêmicos"> Nega sintomas sistêmicos</label>
 
-<h2>4️⃣ Exame Físico</h2>
-<label><input type="checkbox" value="artrite em pequenas articulações"> Artrite em pequenas articulações</label>
-<label><input type="checkbox" value="artrite simétrica"> Artrite simétrica</label>
-<label><input type="checkbox" value="limitação de movimento"> Limitação de movimento</label>
-<label><input type="checkbox" value="edema articular ao exame"> Edema ao exame</label>
-<label><input type="checkbox" value="deformidades articulares"> Deformidades</label>
-<label><input type="checkbox" value="força muscular preservada"> Força preservada</label>
-<label><input type="checkbox" value="força muscular reduzida"> Força reduzida</label>
-<label><input type="checkbox" value="rash malar"> Rash malar</label>
-<label><input type="checkbox" value="espessamento cutâneo"> Espessamento cutâneo</label>
+</div>
 
-<button onclick="gerarTexto()">Gerar HDA + Conduta</button>
-<button onclick="copiarTexto()">Copiar Texto</button>
+<div class="section">
+<h2>EXAME FÍSICO</h2>
 
-<textarea id="resultado" rows="15"></textarea>
+<label><input type="checkbox" value="artrite objetiva"> Artrite objetiva</label>
+<label><input type="checkbox" value="simétrica"> Artrite simétrica</label>
+<label><input type="checkbox" value="rash presente"> Rash presente</label>
+<label><input type="checkbox" value="força reduzida"> Força reduzida</label>
+<label><input type="checkbox" value="exame sem alterações"> Exame sem alterações</label>
+
+<label>FAN:
+<select id="fan">
+<option value="">Não informado</option>
+<option value="positivo">Positivo</option>
+<option value="negativo">Negativo</option>
+</select></label>
+
+</div>
+
+<button onclick="gerar()">Gerar Evolução Completa</button>
+<button onclick="copiar()">Copiar Texto</button>
+
+<textarea id="resultado" rows="25"></textarea>
 
 <script>
-function gerarTexto() {
-  let texto = "HDA:\nPaciente apresenta ";
 
-  let checkboxes = document.querySelectorAll("input[type=checkbox]:checked");
-  let sintomas = [];
-  checkboxes.forEach(cb => sintomas.push(cb.value));
+function gerar(){
 
-  if (sintomas.length > 0) {
-    texto += sintomas.join(", ");
-  }
+let checks = document.querySelectorAll("input[type=checkbox]:checked");
+let dados = [];
+checks.forEach(cb => dados.push(cb.value));
 
-  let duracao = document.getElementById("duracao").value;
-  let padrao = document.getElementById("padrao").value;
-  let intensidade = document.getElementById("intensidade").value;
-  let rigidez = document.getElementById("rigidez").value;
+let tipo = document.getElementById("tipo").value;
+let padrao = document.getElementById("padrao").value;
+let rigidez = document.getElementById("rigidez").value;
+let fan = document.getElementById("fan").value;
 
-  if (duracao) texto += ", " + duracao;
-  if (intensidade) texto += ", dor de intensidade " + intensidade;
-  if (padrao) texto += ", com " + padrao;
-  if (rigidez) texto += ", rigidez matinal " + rigidez;
+let texto = "HDA:\nPaciente com acometimento " + tipo + ", apresentando ";
+texto += dados.join(", ");
+if(padrao) texto += ", padrão " + padrao;
+if(rigidez) texto += ", rigidez matinal " + rigidez;
+texto += ".\n\n";
 
-  texto += ".\n\n";
+texto += "ISDA:\n";
+texto += dados.join(", ") + ".\n\n";
 
-  texto += "CONDUTA:\n";
-  texto += "- Solicitar exames laboratoriais: hemograma, VHS, PCR, FAN, FR, anti-CCP conforme suspeita.\n";
-  texto += "- Avaliar necessidade de imagem (RX ou USG de articulações).\n";
-  texto += "- Considerar início de AINE para controle sintomático.\n";
-  texto += "- Encaminhar ou discutir com reumatologia.\n";
+texto += "EXAME FÍSICO:\n";
+texto += dados.join(", ");
+if(fan) texto += ", FAN " + fan;
+texto += ".\n\n";
 
-  document.getElementById("resultado").value = texto;
+let hipoteses = [];
+
+if(dados.includes("artrite objetiva") &&
+dados.includes("simétrica") &&
+rigidez == ">1h"){
+hipoteses.push("Artrite Reumatoide");
 }
 
-function copiarTexto() {
-  let texto = document.getElementById("resultado");
-  texto.select();
-  document.execCommand("copy");
-  alert("Texto copiado!");
+if((dados.includes("rash malar") || dados.includes("fotossensibilidade")) &&
+dados.includes("úlcera oral") &&
+fan == "positivo"){
+hipoteses.push("Lúpus Eritematoso Sistêmico");
 }
+
+if(tipo == "axial" && padrao == "inflamatório"){
+hipoteses.push("Espondiloartrite");
+}
+
+if(dados.includes("olho seco") && dados.includes("boca seca")){
+hipoteses.push("Síndrome de Sjögren");
+}
+
+texto += "HIPÓTESES DIAGNÓSTICAS:\n";
+if(hipoteses.length > 0){
+texto += hipoteses.join(", ");
+}else{
+texto += "A esclarecer conforme investigação.";
+}
+
+texto += "\n\nCONDUTA:\n";
+texto += "- Solicitar exames laboratoriais direcionados.\n";
+texto += "- Considerar imagem conforme acometimento.\n";
+texto += "- Avaliar encaminhamento para reumatologia.\n";
+
+document.getElementById("resultado").value = texto;
+}
+
+function copiar(){
+let texto = document.getElementById("resultado");
+texto.select();
+document.execCommand("copy");
+alert("Texto copiado!");
+}
+
 </script>
 
 </body>
