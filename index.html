@@ -2,82 +2,107 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Gerador Reumato Avançado</title>
+<title>Protocolo Reumatologia - Completo</title>
 
 <style>
-body { font-family: Arial; margin:40px; max-width:1000px; }
-h2 { margin-top:25px; }
-label { display:block; margin-top:5px; }
+body { font-family: Arial; margin:40px; max-width:1100px; }
+h2 { margin-top:30px; }
+h3 { margin-top:20px; }
+label { display:block; margin-top:6px; }
 textarea { width:100%; margin-top:20px; }
-button { margin-top:15px; padding:10px; margin-right:10px; }
-.section { border:1px solid #ddd; padding:15px; border-radius:10px; margin-top:20px; }
+button { margin-top:20px; padding:10px; margin-right:10px; }
+.section { border:1px solid #ccc; padding:20px; border-radius:10px; margin-top:25px; }
 </style>
 </head>
 
 <body>
 
-<h1>Gerador de Evolução - Reumatologia</h1>
+<h1>PROTOCOLO DE ANAMNESE REUMATOLÓGICA</h1>
 
 <div class="section">
-<h2>HDA</h2>
+<h2>1. PADRÃO DE ACOMETIMENTO</h2>
 
-<label>Tipo de acometimento:
-<select id="tipo">
+<label>Duração:
+<select id="duracao">
 <option value="">Selecione</option>
-<option value="periférico">Periférico</option>
+<option value="agudo (<6 semanas)">Agudo</option>
+<option value="subagudo (6-12 semanas)">Subagudo</option>
+<option value="crônico (>12 semanas)">Crônico</option>
+</select></label>
+
+<label>Padrão articular:
+<select id="padraoArticular">
+<option value="">Selecione</option>
+<option value="monoarticular">Monoarticular</option>
+<option value="oligoarticular">Oligoarticular</option>
+<option value="poliarticular">Poliarticular</option>
 <option value="axial">Axial</option>
 <option value="misto">Misto</option>
 </select></label>
 
-<h3>Articulações:</h3>
-<label><input type="checkbox" value="mãos"> Mãos</label>
+<h3>Topografia</h3>
+<label><input type="checkbox" value="IFP"> IFP</label>
+<label><input type="checkbox" value="MCP"> MCP</label>
 <label><input type="checkbox" value="punhos"> Punhos</label>
+<label><input type="checkbox" value="cotovelos"> Cotovelos</label>
+<label><input type="checkbox" value="ombros"> Ombros</label>
+<label><input type="checkbox" value="quadris"> Quadris</label>
 <label><input type="checkbox" value="joelhos"> Joelhos</label>
 <label><input type="checkbox" value="tornozelos"> Tornozelos</label>
-<label><input type="checkbox" value="pés"> Pés</label>
+<label><input type="checkbox" value="MTF"> MTF</label>
 <label><input type="checkbox" value="coluna lombar"> Coluna lombar</label>
-<label><input type="checkbox" value="nega dor articular"> Nega dor articular</label>
+<label><input type="checkbox" value="sacroilíacas"> Sacroilíacas</label>
 
-<label>Padrão:
-<select id="padrao">
+<label>Rigidez matinal:
+<select id="rigidez">
+<option value="">Selecione</option>
+<option value="<30min"> <30min</option>
+<option value="30-60min"> 30-60min</option>
+<option value=">60min"> >60min</option>
+<option value="ausente"> Ausente</option>
+</select></label>
+
+<label>Padrão da dor:
+<select id="padraoDor">
 <option value="">Selecione</option>
 <option value="inflamatório">Inflamatório</option>
 <option value="mecânico">Mecânico</option>
 </select></label>
 
-<label>Rigidez matinal:
-<select id="rigidez">
-<option value="">Selecione</option>
-<option value=">1h">> 1h</option>
-<option value="<30min">< 30min</option>
-<option value="nega">Nega</option>
-</select></label>
-
 </div>
 
 <div class="section">
-<h2>ISDA</h2>
+<h2>2. MANIFESTAÇÕES SISTÊMICAS (ISDA)</h2>
 
+<h3>Constitucionais</h3>
 <label><input type="checkbox" value="febre"> Febre</label>
 <label><input type="checkbox" value="fadiga"> Fadiga</label>
+<label><input type="checkbox" value="perda ponderal"> Perda ponderal</label>
+
+<h3>Cutâneo-mucosas</h3>
 <label><input type="checkbox" value="rash malar"> Rash malar</label>
 <label><input type="checkbox" value="fotossensibilidade"> Fotossensibilidade</label>
-<label><input type="checkbox" value="úlcera oral"> Úlcera oral</label>
-<label><input type="checkbox" value="Raynaud"> Raynaud</label>
+<label><input type="checkbox" value="úlceras orais"> Úlceras orais</label>
+<label><input type="checkbox" value="alopécia"> Alopécia</label>
+<label><input type="checkbox" value="Raynaud"> Fenômeno de Raynaud</label>
+
+<h3>Outros</h3>
 <label><input type="checkbox" value="olho seco"> Olho seco</label>
 <label><input type="checkbox" value="boca seca"> Boca seca</label>
-<label><input type="checkbox" value="nega sintomas sistêmicos"> Nega sintomas sistêmicos</label>
+<label><input type="checkbox" value="dispneia"> Dispneia</label>
+<label><input type="checkbox" value="dor pleurítica"> Dor pleurítica</label>
 
 </div>
 
 <div class="section">
-<h2>EXAME FÍSICO</h2>
+<h2>3. EXAME FÍSICO</h2>
 
 <label><input type="checkbox" value="artrite objetiva"> Artrite objetiva</label>
-<label><input type="checkbox" value="simétrica"> Artrite simétrica</label>
-<label><input type="checkbox" value="rash presente"> Rash presente</label>
-<label><input type="checkbox" value="força reduzida"> Força reduzida</label>
-<label><input type="checkbox" value="exame sem alterações"> Exame sem alterações</label>
+<label><input type="checkbox" value="simétrica"> Distribuição simétrica</label>
+<label><input type="checkbox" value="deformidades"> Deformidades articulares</label>
+<label><input type="checkbox" value="derrame articular"> Derrame articular</label>
+<label><input type="checkbox" value="rash presente"> Rash ao exame</label>
+<label><input type="checkbox" value="força reduzida"> Fraqueza muscular proximal</label>
 
 <label>FAN:
 <select id="fan">
@@ -91,7 +116,7 @@ button { margin-top:15px; padding:10px; margin-right:10px; }
 <button onclick="gerar()">Gerar Evolução Completa</button>
 <button onclick="copiar()">Copiar Texto</button>
 
-<textarea id="resultado" rows="30"></textarea>
+<textarea id="resultado" rows="40"></textarea>
 
 <script>
 
@@ -101,16 +126,16 @@ let checks = document.querySelectorAll("input[type=checkbox]:checked");
 let dados = [];
 checks.forEach(cb => dados.push(cb.value));
 
-let tipo = document.getElementById("tipo").value;
-let padrao = document.getElementById("padrao").value;
+let duracao = document.getElementById("duracao").value;
+let padraoArticular = document.getElementById("padraoArticular").value;
 let rigidez = document.getElementById("rigidez").value;
+let padraoDor = document.getElementById("padraoDor").value;
 let fan = document.getElementById("fan").value;
 
-let texto = "HDA:\nPaciente com acometimento " + (tipo || "não especificado") + ", apresentando ";
+let texto = "HDA:\n";
+texto += "Quadro " + duracao + ", padrão " + padraoArticular + ", acometendo ";
 texto += dados.join(", ");
-if(padrao) texto += ", padrão " + padrao;
-if(rigidez) texto += ", rigidez matinal " + rigidez;
-texto += ".\n\n";
+texto += ", com dor de padrão " + padraoDor + " e rigidez matinal " + rigidez + ".\n\n";
 
 texto += "ISDA:\n" + dados.join(", ") + ".\n\n";
 
@@ -122,50 +147,43 @@ let hipoteses = [];
 let exames = [];
 
 /* AR */
-if(dados.includes("artrite objetiva") &&
+if(padraoArticular == "poliarticular" &&
 dados.includes("simétrica") &&
-rigidez == ">1h"){
+rigidez == ">60min"){
 hipoteses.push("Artrite Reumatoide");
-exames.push("- FR\n- Anti-CCP\n- VHS\n- PCR\n- RX mãos e punhos\n");
+exames.push("FR, Anti-CCP, VHS, PCR, RX mãos/punhos");
 }
 
 /* LES */
 if((dados.includes("rash malar") || dados.includes("fotossensibilidade")) &&
-dados.includes("úlcera oral") &&
+dados.includes("úlceras orais") &&
 fan == "positivo"){
 hipoteses.push("Lúpus Eritematoso Sistêmico");
-exames.push("- Anti-dsDNA\n- Anti-Sm\n- C3 e C4\n- EAS\n- Proteinúria 24h\n- Hemograma\n");
+exames.push("Anti-dsDNA, Anti-Sm, C3/C4, EAS, Proteinúria 24h");
 }
 
 /* Espondiloartrite */
-if(tipo == "axial" && padrao == "inflamatório"){
+if(padraoArticular == "axial" &&
+padraoDor == "inflamatório"){
 hipoteses.push("Espondiloartrite");
-exames.push("- HLA-B27\n- VHS\n- PCR\n- RX sacroilíacas\n- RNM sacroilíacas\n");
+exames.push("HLA-B27, VHS, PCR, RX/RNM sacroilíacas");
 }
 
 /* Sjogren */
 if(dados.includes("olho seco") && dados.includes("boca seca")){
 hipoteses.push("Síndrome de Sjögren");
-exames.push("- Anti-SSA (Ro)\n- Anti-SSB (La)\n- FAN\n- Teste de Schirmer\n");
+exames.push("Anti-SSA, Anti-SSB, FAN, Teste de Schirmer");
 }
 
 texto += "HIPÓTESES DIAGNÓSTICAS:\n";
-if(hipoteses.length > 0){
-texto += hipoteses.join(", ");
-}else{
-texto += "A esclarecer.";
-}
+texto += hipoteses.length ? hipoteses.join(", ") : "A esclarecer.";
+texto += "\n\n";
 
-texto += "\n\nEXAMES SUGERIDOS CONFORME HIPÓTESE:\n";
-if(exames.length > 0){
-texto += exames.join("\n");
-}else{
-texto += "- Avaliação inicial com hemograma, VHS e PCR.\n";
-}
-
-texto += "\nCONDUTA:\n";
-texto += "- Iniciar sintomáticos se necessário.\n";
-texto += "- Encaminhar para reumatologia conforme gravidade.\n";
+texto += "EXAMES ESPECÍFICOS A SOLICITAR:\n";
+texto += exames.length ? exames.join("\n") : "Hemograma, VHS, PCR.";
+texto += "\n\nCONDUTA:\n";
+texto += "- Iniciar analgesia/AINE se necessário.\n";
+texto += "- Encaminhamento conforme hipótese.\n";
 
 document.getElementById("resultado").value = texto;
 }
