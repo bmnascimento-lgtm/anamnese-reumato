@@ -1,198 +1,172 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Protocolo Reumatologia - Completo</title>
+<title>Anamnese Reumatologia</title>
 
 <style>
-body { font-family: Arial; margin:40px; max-width:1100px; }
-h2 { margin-top:30px; }
-h3 { margin-top:20px; }
-label { display:block; margin-top:6px; }
-textarea { width:100%; margin-top:20px; }
-button { margin-top:20px; padding:10px; margin-right:10px; }
-.section { border:1px solid #ccc; padding:20px; border-radius:10px; margin-top:25px; }
+body {
+    font-family: Arial;
+    margin: 30px;
+    background-color: #f4f6f8;
+}
+
+h2 {
+    margin-top: 30px;
+}
+
+.section {
+    background: white;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+}
+
+button {
+    padding: 10px 15px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+textarea {
+    width: 100%;
+    height: 300px;
+    margin-top: 20px;
+}
 </style>
 </head>
-
 <body>
 
-<h1>PROTOCOLO DE ANAMNESE REUMATOLÓGICA</h1>
+<h1>Gerador de Anamnese Reumatológica</h1>
 
 <div class="section">
-<h2>1. PADRÃO DE ACOMETIMENTO</h2>
-
-<label>Duração:
-<select id="duracao">
-<option value="">Selecione</option>
-<option value="agudo (<6 semanas)">Agudo</option>
-<option value="subagudo (6-12 semanas)">Subagudo</option>
-<option value="crônico (>12 semanas)">Crônico</option>
-</select></label>
-
-<label>Padrão articular:
-<select id="padraoArticular">
-<option value="">Selecione</option>
-<option value="monoarticular">Monoarticular</option>
-<option value="oligoarticular">Oligoarticular</option>
-<option value="poliarticular">Poliarticular</option>
-<option value="axial">Axial</option>
-<option value="misto">Misto</option>
-</select></label>
-
-<h3>Topografia</h3>
-<label><input type="checkbox" value="IFP"> IFP</label>
-<label><input type="checkbox" value="MCP"> MCP</label>
-<label><input type="checkbox" value="punhos"> Punhos</label>
-<label><input type="checkbox" value="cotovelos"> Cotovelos</label>
-<label><input type="checkbox" value="ombros"> Ombros</label>
-<label><input type="checkbox" value="quadris"> Quadris</label>
-<label><input type="checkbox" value="joelhos"> Joelhos</label>
-<label><input type="checkbox" value="tornozelos"> Tornozelos</label>
-<label><input type="checkbox" value="MTF"> MTF</label>
-<label><input type="checkbox" value="coluna lombar"> Coluna lombar</label>
-<label><input type="checkbox" value="sacroilíacas"> Sacroilíacas</label>
-
-<label>Rigidez matinal:
-<select id="rigidez">
-<option value="">Selecione</option>
-<option value="<30min"> <30min</option>
-<option value="30-60min"> 30-60min</option>
-<option value=">60min"> >60min</option>
-<option value="ausente"> Ausente</option>
-</select></label>
-
-<label>Padrão da dor:
-<select id="padraoDor">
-<option value="">Selecione</option>
-<option value="inflamatório">Inflamatório</option>
-<option value="mecânico">Mecânico</option>
-</select></label>
-
+<h2>Selecionar Condição</h2>
+<select id="condicao">
+    <option value="oa">Osteoartrite</option>
+    <option value="ar">Artrite Reumatoide</option>
+    <option value="fibro">Fibromialgia</option>
+</select>
 </div>
 
 <div class="section">
-<h2>2. MANIFESTAÇÕES SISTÊMICAS (ISDA)</h2>
+<h2>HDA</h2>
 
-<h3>Constitucionais</h3>
-<label><input type="checkbox" value="febre"> Febre</label>
-<label><input type="checkbox" value="fadiga"> Fadiga</label>
-<label><input type="checkbox" value="perda ponderal"> Perda ponderal</label>
+<label>Dor articular:</label>
+<input type="checkbox" id="dor_sim"> Presente
+<input type="checkbox" id="dor_nao"> Ausente
+<br><br>
 
-<h3>Cutâneo-mucosas</h3>
-<label><input type="checkbox" value="rash malar"> Rash malar</label>
-<label><input type="checkbox" value="fotossensibilidade"> Fotossensibilidade</label>
-<label><input type="checkbox" value="úlceras orais"> Úlceras orais</label>
-<label><input type="checkbox" value="alopécia"> Alopécia</label>
-<label><input type="checkbox" value="Raynaud"> Fenômeno de Raynaud</label>
+<label>Padrão:</label>
+<input type="checkbox" id="mecanica"> Mecânica
+<input type="checkbox" id="inflamatoria"> Inflamatória
+<br><br>
 
-<h3>Outros</h3>
-<label><input type="checkbox" value="olho seco"> Olho seco</label>
-<label><input type="checkbox" value="boca seca"> Boca seca</label>
-<label><input type="checkbox" value="dispneia"> Dispneia</label>
-<label><input type="checkbox" value="dor pleurítica"> Dor pleurítica</label>
+<label>Rigidez matinal > 30min:</label>
+<input type="checkbox" id="rigidez_sim"> Sim
+<input type="checkbox" id="rigidez_nao"> Não
+<br><br>
 
+<label>Simetria:</label>
+<input type="checkbox" id="simetrica"> Simétrica
+<input type="checkbox" id="assimetrica"> Assimétrica
 </div>
 
 <div class="section">
-<h2>3. EXAME FÍSICO</h2>
+<h2>ISDA</h2>
 
-<label><input type="checkbox" value="artrite objetiva"> Artrite objetiva</label>
-<label><input type="checkbox" value="simétrica"> Distribuição simétrica</label>
-<label><input type="checkbox" value="deformidades"> Deformidades articulares</label>
-<label><input type="checkbox" value="derrame articular"> Derrame articular</label>
-<label><input type="checkbox" value="rash presente"> Rash ao exame</label>
-<label><input type="checkbox" value="força reduzida"> Fraqueza muscular proximal</label>
-
-<label>FAN:
-<select id="fan">
-<option value="">Não informado</option>
-<option value="positivo">Positivo</option>
-<option value="negativo">Negativo</option>
-</select></label>
-
+<input type="checkbox" id="febre"> Febre
+<input type="checkbox" id="emagrecimento"> Emagrecimento
+<input type="checkbox" id="fadiga"> Fadiga
+<input type="checkbox" id="rash"> Rash cutâneo
+<input type="checkbox" id="fenomeno_raynaud"> Fenômeno de Raynaud
 </div>
 
-<button onclick="gerar()">Gerar Evolução Completa</button>
-<button onclick="copiar()">Copiar Texto</button>
+<div class="section">
+<h2>Exame Físico</h2>
 
-<textarea id="resultado" rows="40"></textarea>
+<input type="checkbox" id="sinovite"> Sinovite
+<input type="checkbox" id="crepitacao"> Crepitação
+<input type="checkbox" id="nodulos"> Nódulos
+<input type="checkbox" id="pontos_dolorosos"> Pontos dolorosos difusos
+</div>
+
+<div class="section">
+<h2>Hipótese Diagnóstica e Conduta</h2>
+<input type="checkbox" id="aine"> Prescrever AINE
+<input type="checkbox" id="corticoide"> Considerar corticoide
+<input type="checkbox" id="dmcd"> Iniciar DMCD
+<input type="checkbox" id="fisioterapia"> Encaminhar fisioterapia
+<input type="checkbox" id="exames_lab"> Solicitar exames laboratoriais
+</div>
+
+<button onclick="gerarTexto()">Gerar Texto</button>
+<button onclick="copiarTexto()">Copiar Texto</button>
+
+<textarea id="resultado"></textarea>
 
 <script>
 
-function gerar(){
+function gerarTexto() {
 
-let checks = document.querySelectorAll("input[type=checkbox]:checked");
-let dados = [];
-checks.forEach(cb => dados.push(cb.value));
+let condicao = document.getElementById("condicao").value;
+let texto = "";
 
-let duracao = document.getElementById("duracao").value;
-let padraoArticular = document.getElementById("padraoArticular").value;
-let rigidez = document.getElementById("rigidez").value;
-let padraoDor = document.getElementById("padraoDor").value;
-let fan = document.getElementById("fan").value;
+texto += "HDA: ";
 
-let texto = "HDA:\n";
-texto += "Quadro " + duracao + ", padrão " + padraoArticular + ", acometendo ";
-texto += dados.join(", ");
-texto += ", com dor de padrão " + padraoDor + " e rigidez matinal " + rigidez + ".\n\n";
+if (dor_sim.checked) texto += "Paciente refere dor articular. ";
+if (dor_nao.checked) texto += "Nega dor articular. ";
 
-texto += "ISDA:\n" + dados.join(", ") + ".\n\n";
+if (mecanica.checked) texto += "Dor com padrão mecânico. ";
+if (inflamatoria.checked) texto += "Dor com padrão inflamatório. ";
 
-texto += "EXAME FÍSICO:\n" + dados.join(", ");
-if(fan) texto += ", FAN " + fan;
-texto += ".\n\n";
+if (rigidez_sim.checked) texto += "Refere rigidez matinal superior a 30 minutos. ";
+if (rigidez_nao.checked) texto += "Nega rigidez matinal prolongada. ";
 
-let hipoteses = [];
-let exames = [];
+if (simetrica.checked) texto += "Acometimento simétrico. ";
+if (assimetrica.checked) texto += "Acometimento assimétrico. ";
 
-/* AR */
-if(padraoArticular == "poliarticular" &&
-dados.includes("simétrica") &&
-rigidez == ">60min"){
-hipoteses.push("Artrite Reumatoide");
-exames.push("FR, Anti-CCP, VHS, PCR, RX mãos/punhos");
-}
 
-/* LES */
-if((dados.includes("rash malar") || dados.includes("fotossensibilidade")) &&
-dados.includes("úlceras orais") &&
-fan == "positivo"){
-hipoteses.push("Lúpus Eritematoso Sistêmico");
-exames.push("Anti-dsDNA, Anti-Sm, C3/C4, EAS, Proteinúria 24h");
-}
+texto += "\n\nISDA: ";
 
-/* Espondiloartrite */
-if(padraoArticular == "axial" &&
-padraoDor == "inflamatório"){
-hipoteses.push("Espondiloartrite");
-exames.push("HLA-B27, VHS, PCR, RX/RNM sacroilíacas");
-}
+if (febre.checked) texto += "Refere febre. ";
+if (emagrecimento.checked) texto += "Refere emagrecimento. ";
+if (fadiga.checked) texto += "Refere fadiga. ";
+if (rash.checked) texto += "Presença de rash cutâneo. ";
+if (fenomeno_raynaud.checked) texto += "Fenômeno de Raynaud presente. ";
 
-/* Sjogren */
-if(dados.includes("olho seco") && dados.includes("boca seca")){
-hipoteses.push("Síndrome de Sjögren");
-exames.push("Anti-SSA, Anti-SSB, FAN, Teste de Schirmer");
-}
 
-texto += "HIPÓTESES DIAGNÓSTICAS:\n";
-texto += hipoteses.length ? hipoteses.join(", ") : "A esclarecer.";
-texto += "\n\n";
+texto += "\n\nExame Físico: ";
 
-texto += "EXAMES ESPECÍFICOS A SOLICITAR:\n";
-texto += exames.length ? exames.join("\n") : "Hemograma, VHS, PCR.";
-texto += "\n\nCONDUTA:\n";
-texto += "- Iniciar analgesia/AINE se necessário.\n";
-texto += "- Encaminhamento conforme hipótese.\n";
+if (sinovite.checked) texto += "Presença de sinovite à palpação. ";
+if (crepitacao.checked) texto += "Crepitação articular. ";
+if (nodulos.checked) texto += "Nódulos subcutâneos. ";
+if (pontos_dolorosos.checked) texto += "Dor à palpação em múltiplos pontos específicos. ";
+
+
+texto += "\n\nHD: ";
+
+if (condicao == "oa") texto += "Quadro sugestivo de Osteoartrite. ";
+if (condicao == "ar") texto += "Quadro sugestivo de Artrite Reumatoide. ";
+if (condicao == "fibro") texto += "Quadro sugestivo de Fibromialgia. ";
+
+
+texto += "\n\nConduta: ";
+
+if (aine.checked) texto += "Iniciado AINE. ";
+if (corticoide.checked) texto += "Considerar corticoide conforme atividade. ";
+if (dmcd.checked) texto += "Programado início de DMCD. ";
+if (fisioterapia.checked) texto += "Encaminhado para fisioterapia. ";
+if (exames_lab.checked) texto += "Solicitados exames laboratoriais complementares. ";
 
 document.getElementById("resultado").value = texto;
+
 }
 
-function copiar(){
-let texto = document.getElementById("resultado");
-texto.select();
-document.execCommand("copy");
-alert("Texto copiado!");
+function copiarTexto() {
+    let texto = document.getElementById("resultado");
+    texto.select();
+    document.execCommand("copy");
+    alert("Texto copiado!");
 }
 
 </script>
