@@ -2,99 +2,89 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Anamnese Reumatológica - Ambulatório</title>
+<title>Sistema Reumatologia</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
 body {
     font-family: Arial;
-    margin: 25px;
-    background-color: #eef2f7;
+    background: #e9edf2;
+    margin: 20px;
 }
 
-.section {
+.container {
     background: white;
-    padding: 15px;
+    padding: 20px;
+    border-radius: 10px;
     margin-bottom: 15px;
-    border-radius: 8px;
 }
 
-h2 { margin-top: 0; }
+h2 {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 5px;
+}
 
 button {
     padding: 10px 15px;
-    margin-top: 15px;
+    margin-top: 10px;
+    margin-right: 10px;
     cursor: pointer;
 }
 
 textarea {
     width: 100%;
-    height: 450px;
+    height: 400px;
     margin-top: 20px;
 }
 </style>
 </head>
 <body>
 
-<h1>Anamnese Reumatológica – Ferramenta Clínica</h1>
+<h1>Sistema Clínico Reumatologia</h1>
 
-<div class="section">
-<h2>HDA</h2>
-
-<input type="checkbox" id="mono"> Monoarticular
-<input type="checkbox" id="oligo"> Oligoarticular
-<input type="checkbox" id="poli"> Poliarticular
-<br><br>
-
-<input type="checkbox" id="mecanica"> Padrão mecânico
-<input type="checkbox" id="inflamatoria"> Padrão inflamatório
-<br><br>
-
-<input type="checkbox" id="aguda"> Início agudo
-<input type="checkbox" id="cronica"> Curso crônico
-<br><br>
-
-<input type="checkbox" id="rigidez"> Rigidez matinal >30min
+<div class="container">
+<h2>Articulações Acometidas</h2>
+<input type="number" id="num_pequenas" placeholder="Nº pequenas articulações">
+<input type="number" id="num_grandes" placeholder="Nº grandes articulações">
 </div>
 
-
-<div class="section">
-<h2>ISDA</h2>
-
-<input type="checkbox" id="febre"> Febre
-<input type="checkbox" id="emagrecimento"> Emagrecimento
-<input type="checkbox" id="fadiga"> Fadiga
-<input type="checkbox" id="uveite"> Uveíte
-<input type="checkbox" id="rash"> Rash
-<input type="checkbox" id="raynaud"> Raynaud
-<input type="checkbox" id="diarreia"> Diarreia prévia
-<input type="checkbox" id="uretrite"> Uretrite prévia
-<input type="checkbox" id="hist_cancer"> História de câncer
-</div>
-
-
-<div class="section">
-<h2>Exame Físico</h2>
-
+<div class="container">
+<h2>Padrão Clínico</h2>
+<input type="checkbox" id="inflamatoria"> Dor inflamatória
+<input type="checkbox" id="rigidez"> Rigidez >30min
 <input type="checkbox" id="simetrico"> Simétrico
-<input type="checkbox" id="pequenas"> Pequenas articulações
-<input type="checkbox" id="grandes"> Grandes articulações
-<br><br>
-
-<input type="checkbox" id="sinovite"> Sinovite
-<input type="checkbox" id="calor"> Calor
-<input type="checkbox" id="rubor"> Rubor
-<br><br>
-
-<input type="checkbox" id="crepitacao"> Crepitação
-<input type="checkbox" id="deformidade"> Deformidade
-<br><br>
-
-<input type="checkbox" id="dor_difusa"> Dor difusa
-<input type="checkbox" id="pontos"> Pontos dolorosos ≥11
+<input type="checkbox" id="lombalgia_inflamatoria"> Lombalgia inflamatória
+<input type="checkbox" id="entesite"> Entesite
+<input type="checkbox" id="uveite"> Uveíte
 </div>
 
-<button onclick="gerar()">Gerar Anamnese</button>
-<button onclick="copiar()">Copiar</button>
+<div class="container">
+<h2>Laboratório</h2>
+<input type="checkbox" id="fr"> Fator Reumatoide +
+<input type="checkbox" id="anti_ccp"> Anti-CCP +
+<input type="checkbox" id="vhs_alta"> VHS/PCR elevados
+<br><br>
+<select id="fan_resultado">
+<option value="">FAN</option>
+<option value="homogeneo">Homogêneo</option>
+<option value="pontilhado_fino">Pontilhado fino</option>
+<option value="pontilhado_grosso">Pontilhado grosso</option>
+<option value="centromerico">Centromérico</option>
+<option value="nucleolar">Nucleolar</option>
+</select>
+</div>
+
+<div class="container">
+<h2>DAS28 (simplificado)</h2>
+<input type="number" id="art_dolorosas" placeholder="Articulações dolorosas (0-28)">
+<input type="number" id="art_edemaciadas" placeholder="Articulações edemaciadas (0-28)">
+<input type="number" id="vhs_valor" placeholder="VHS">
+<input type="number" id="vas" placeholder="VAS dor (0-100)">
+</div>
+
+<button onclick="gerar()">Gerar Relatório</button>
+<button onclick="exportarPDF()">Exportar PDF</button>
 
 <textarea id="resultado"></textarea>
 
@@ -102,103 +92,78 @@ textarea {
 
 function gerar(){
 
-let texto = "HDA: ";
+let texto = "RELATÓRIO REUMATOLÓGICO\n\n";
 
-let inflamatorio = inflamatoria.checked;
-let mecanico = mecanica.checked;
+// ================= AR SCORE =================
+let scoreAR = 0;
+let pequenas = parseInt(num_pequenas.value) || 0;
+let grandes = parseInt(num_grandes.value) || 0;
 
-// HDA
-if(mono.checked) texto += "Quadro monoarticular. ";
-if(oligo.checked) texto += "Quadro oligoarticular. ";
-if(poli.checked) texto += "Quadro poliarticular. ";
+if(pequenas >= 4) scoreAR += 3;
+else if(pequenas >=1) scoreAR += 2;
+else if(grandes >=1) scoreAR += 1;
 
-if(inflamatorio) texto += "Dor com padrão inflamatório. ";
-if(mecanico) texto += "Dor com padrão mecânico. ";
+if(fr.checked || anti_ccp.checked) scoreAR += 3;
+if(vhs_alta.checked) scoreAR += 1;
+if(rigidez.checked) scoreAR += 1;
 
-if(aguda.checked) texto += "Início agudo. ";
-if(cronica.checked) texto += "Curso crônico. ";
-if(rigidez.checked) texto += "Rigidez matinal prolongada. ";
+texto += "Pontuação ACR/EULAR simplificada AR: " + scoreAR + "\n";
 
-texto += "\n\nISDA: ";
-
-if(febre.checked) texto += "Refere febre. ";
-else texto += "Nega febre. ";
-
-if(emagrecimento.checked) texto += "Refere emagrecimento. ";
-else texto += "Nega emagrecimento. ";
-
-if(fadiga.checked) texto += "Refere fadiga. ";
-
-if(rash.checked) texto += "Rash cutâneo presente. ";
-if(raynaud.checked) texto += "Fenômeno de Raynaud presente. ";
-if(uveite.checked) texto += "História de uveíte. ";
-if(diarreia.checked) texto += "Diarreia prévia. ";
-if(uretrite.checked) texto += "Uretrite prévia. ";
-
-texto += "\n\nExame Físico: ";
-
-if(simetrico.checked) texto += "Acometimento simétrico. ";
-if(pequenas.checked) texto += "Pequenas articulações acometidas. ";
-if(grandes.checked) texto += "Grandes articulações acometidas. ";
-if(sinovite.checked) texto += "Sinovite presente. ";
-if(calor.checked) texto += "Calor local. ";
-if(rubor.checked) texto += "Rubor. ";
-if(crepitacao.checked) texto += "Crepitação. ";
-if(deformidade.checked) texto += "Deformidades estruturais. ";
-if(dor_difusa.checked) texto += "Dor difusa. ";
-if(pontos.checked) texto += "Múltiplos pontos dolorosos positivos. ";
-
-// ALGORITMO
-
-let hd = "\n\nHipóteses Diagnósticas:\n";
-let exames = "\nExames Sugeridos:\n";
-let conduta = "\nConduta Inicial Sugerida:\n";
-let redflag = "";
-
-// AR
-if(inflamatorio && poli.checked && simetrico.checked && pequenas.checked){
-    hd += "- Artrite Reumatoide.\n";
-    exames += "- VHS, PCR, Fator Reumatoide, Anti-CCP.\n";
-    conduta += "- Encaminhar reumatologia.\n- Considerar início precoce de DMARD.\n";
+if(scoreAR >= 6){
+    texto += "→ Critérios compatíveis com Artrite Reumatoide.\n\n";
 }
 
-// OA
-if(mecanico && crepitacao.checked && !febre.checked){
-    hd += "- Osteoartrite.\n";
-    exames += "- RX da articulação acometida.\n";
-    conduta += "- Analgésicos/AINE.\n- Fisioterapia.\n";
+// ================= ESPONDILOARTRITE =================
+if(lombalgia_inflamatoria.checked && (entesite.checked || uveite.checked)){
+    texto += "→ Critérios sugestivos de Espondiloartrite.\n\n";
 }
 
-// Fibromialgia
-if(dor_difusa.checked && pontos.checked && !sinovite.checked){
-    hd += "- Fibromialgia.\n";
-    exames += "- Exames apenas para exclusão.\n";
-    conduta += "- Educação, atividade física regular.\n";
+// ================= FAN =================
+if(fan_resultado.value != ""){
+    texto += "Interpretação FAN: ";
+    if(fan_resultado.value == "homogeneo")
+        texto += "Padrão associado a LES ou doença autoimune sistêmica.\n";
+    if(fan_resultado.value == "pontilhado_fino")
+        texto += "Pode estar associado a LES ou síndrome de Sjögren.\n";
+    if(fan_resultado.value == "pontilhado_grosso")
+        texto += "Associado a doenças do tecido conectivo.\n";
+    if(fan_resultado.value == "centromerico")
+        texto += "Sugestivo de Esclerose Sistêmica limitada.\n";
+    if(fan_resultado.value == "nucleolar")
+        texto += "Sugestivo de Esclerose Sistêmica difusa.\n";
 }
 
-// Gota
-if(mono.checked && aguda.checked && calor.checked){
-    hd += "- Artrite por cristais (Gota).\n";
-    exames += "- Ácido úrico, punção articular se possível.\n";
-    conduta += "- AINE ou colchicina.\n";
-}
+// ================= DAS28 =================
+let dolorosas = parseInt(art_dolorosas.value) || 0;
+let edemaciadas = parseInt(art_edemaciadas.value) || 0;
+let vhs = parseInt(vhs_valor.value) || 0;
+let vas_dor = parseInt(vas.value) || 0;
 
-// RED FLAGS
-if(febre.checked || emagrecimento.checked || hist_cancer.checked){
-    redflag = "\n⚠ Presença de sinais de alerta. Considerar investigação de doença sistêmica ou infecciosa.\n";
-}
+if(dolorosas || edemaciadas || vhs || vas_dor){
+    let das = (0.56 * Math.sqrt(dolorosas)) + 
+              (0.28 * Math.sqrt(edemaciadas)) + 
+              (0.70 * Math.log(vhs)) + 
+              (0.014 * vas_dor);
 
-texto += hd + exames + conduta + redflag;
+    texto += "\nDAS28 aproximado: " + das.toFixed(2) + "\n";
+
+    if(das < 2.6) texto += "Remissão.\n";
+    else if(das < 3.2) texto += "Baixa atividade.\n";
+    else if(das < 5.1) texto += "Atividade moderada.\n";
+    else texto += "Alta atividade.\n";
+}
 
 document.getElementById("resultado").value = texto;
-
 }
 
-function copiar(){
-let texto = document.getElementById("resultado");
-texto.select();
-document.execCommand("copy");
-alert("Copiado!");
+
+// PDF
+function exportarPDF(){
+const { jsPDF } = window.jspdf;
+let doc = new jsPDF();
+let texto = document.getElementById("resultado").value;
+doc.text(texto, 10, 10);
+doc.save("relatorio_reumatologia.pdf");
 }
 
 </script>
