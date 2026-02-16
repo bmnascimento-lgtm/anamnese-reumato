@@ -52,7 +52,7 @@
         }
         .card-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
             gap: 12px;
             background: #d9e6f2;
             padding: 15px;
@@ -125,6 +125,33 @@
             border: 1px solid #b0c8da;
             border-radius: 4px;
             padding: 4px 8px;
+        }
+        .med-detalhes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 8px;
+            margin-left: 32px;
+            padding: 8px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border-left: 3px solid #4a90e2;
+        }
+        .med-detalhes input, .med-detalhes select {
+            border: 1px solid #b0c8da;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 0.9rem;
+        }
+        .med-detalhes .campo-group {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .med-detalhes .campo-group label {
+            font-size: 0.8rem;
+            color: #1e4a76;
+            font-weight: 600;
         }
         .double-col {
             grid-column: span 2;
@@ -323,15 +350,15 @@
         <h2>🔍 SINAIS E SINTOMAS <button onclick="toggleAll('sinais', true)">Marcar todos</button><button onclick="toggleAll('sinais', false)">Limpar</button></h2>
         <div class="card-grid" id="sinais"></div>
 
-        <!-- MEDICAMENTOS EM USO (com imunobiológicos) -->
-        <h2>💊 MEDICAMENTOS EM USO</h2>
+        <!-- MEDICAMENTOS EM USO (com imunobiológicos e opção "outros") -->
+        <h2>💊 MEDICAMENTOS EM USO <button onclick="adicionarOutroMedicamento()">+ Adicionar Outro Medicamento</button></h2>
         <div class="card-grid" id="medicamentos"></div>
 
         <!-- COMORBIDADES (com tempo de diagnóstico) -->
         <h2>📋 COMORBIDADES</h2>
         <div class="card-grid" id="comorbidades"></div>
 
-        <!-- EXAME FÍSICO -->
+        <!-- EXAME FÍSICO (com básicos reumatológicos) -->
         <h2>🩻 EXAME FÍSICO</h2>
         <div class="card-grid">
             <div class="item-card double-col">
@@ -346,12 +373,50 @@
                 <div style="display: flex; gap: 15px; flex-wrap: wrap;">
                     <span>AC: <input type="text" placeholder="RR 2T" id="ac" style="width:120px;"></span>
                     <span>AP: <input type="text" placeholder="MV+ sem RA" id="ap" style="width:150px;"></span>
+                    <span>Abdome: <input type="text" placeholder="..." id="abdome" style="width:120px;"></span>
+                </div>
+            </div>
+            <!-- Exame Físico Reumatológico -->
+            <div class="item-card double-col" style="border-left-color: #f5b042;">
+                <div style="font-weight: 700; color: #1e4a76; margin-bottom: 10px;">🔬 EXAME FÍSICO REUMATOLÓGICO</div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px;">
+                    <div>
+                        <label style="font-weight: 600;">Articulações:</label><br>
+                        <input type="text" id="articulacoes" placeholder="Ex: edema, calor, rubor" style="width:100%;">
+                    </div>
+                    <div>
+                        <label style="font-weight: 600;">Força muscular:</label><br>
+                        <input type="text" id="forca" placeholder="Ex: Grau V em MMSS/MMII" style="width:100%;">
+                    </div>
+                    <div>
+                        <label style="font-weight: 600;">Deformidades:</label><br>
+                        <input type="text" id="deformidades" placeholder="Ex: mãos em pescoço de cisne" style="width:100%;">
+                    </div>
+                    <div>
+                        <label style="font-weight: 600;">Nódulos subcutâneos:</label><br>
+                        <input type="text" id="nodulos" placeholder="Ex: presentes em cotovelos" style="width:100%;">
+                    </div>
+                    <div>
+                        <label style="font-weight: 600;">Derrame articular:</label><br>
+                        <input type="text" id="derrame" placeholder="Ex: joelho direito com derrame" style="width:100%;">
+                    </div>
+                    <div>
+                        <label style="font-weight: 600;">Marcha:</label><br>
+                        <input type="text" id="marcha" placeholder="Ex: claudicante, normal" style="width:100%;">
+                    </div>
+                    <div>
+                        <label style="font-weight: 600;">Edema:</label><br>
+                        <input type="text" id="edema" placeholder="Ex: +++/4, cacifo" style="width:100%;">
+                    </div>
+                    <div>
+                        <label style="font-weight: 600;">Pele:</label><br>
+                        <input type="text" id="pele" placeholder="Ex: rash, psoríase, cicatrizes" style="width:100%;">
+                    </div>
                 </div>
             </div>
             <div class="item-card double-col">
                 <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                    <span>Abdome: <input type="text" placeholder="..." id="abdome" style="width:150px;"></span>
-                    <span>Extrem: <input type="text" placeholder="Sem edema" id="extrem" style="width:150px;"></span>
+                    <span>Extremidades: <input type="text" placeholder="Perfusão, pulsos" id="extrem" style="width:200px;"></span>
                 </div>
             </div>
         </div>
@@ -510,12 +575,12 @@
             });
             document.getElementById('sinais').innerHTML = htmlSinais;
 
-            // Medicamentos (incluindo imunobiológicos)
+            // Medicamentos base
             let htmlMed = '';
             medicamentosBase.forEach(m => {
                 htmlMed += `<div class="item-card">`;
                 htmlMed += `<div class="item-header">`;
-                htmlMed += `<input type="checkbox" class="med-check">`;
+                htmlMed += `<input type="checkbox" class="med-check" onchange="toggleDetalhesMed(this)">`;
                 htmlMed += `<label>${m.nome}</label>`;
                 htmlMed += `</div>`;
                 htmlMed += `<div class="med-group">`;
@@ -523,11 +588,16 @@
                     htmlMed += `<select class="med-via"><option>${m.opcoes.join('</option><option>')}</option></select>`;
                 }
                 htmlMed += `<input type="text" class="med-dose" placeholder="dose (${m.unidade})" style="width:120px;">`;
-                htmlMed += `</div></div>`;
+                htmlMed += `</div>`;
+                htmlMed += `<div class="med-detalhes" style="display: none;">`;
+                htmlMed += `<div class="campo-group"><label>Tempo de uso:</label><input type="text" class="med-tempo" placeholder="ex: 2 meses"></div>`;
+                htmlMed += `<div class="campo-group"><label>Indicação:</label><input type="text" class="med-indicacao" placeholder="ex: artrite reumatoide"></div>`;
+                htmlMed += `</div>`;
+                htmlMed += `</div>`;
             });
             document.getElementById('medicamentos').innerHTML = htmlMed;
 
-            // Comorbidades (com tempo de diagnóstico)
+            // Comorbidades
             let htmlComorb = '';
             comorbidadesLista.forEach(c => {
                 htmlComorb += `
@@ -548,6 +618,40 @@
                 `;
             });
             document.getElementById('comorbidades').innerHTML = htmlComorb;
+        }
+
+        function adicionarOutroMedicamento() {
+            const container = document.getElementById('medicamentos');
+            const div = document.createElement('div');
+            div.className = 'item-card';
+            div.innerHTML = `
+                <div class="item-header">
+                    <input type="checkbox" class="med-check" onchange="toggleDetalhesMed(this)" checked>
+                    <input type="text" placeholder="Nome do medicamento" style="flex-grow:1; padding:4px;">
+                </div>
+                <div class="med-group">
+                    <select class="med-via">
+                        <option>VO</option>
+                        <option>SC</option>
+                        <option>IM</option>
+                        <option>IV</option>
+                        <option>Tópico</option>
+                    </select>
+                    <input type="text" class="med-dose" placeholder="dose" style="width:120px;">
+                </div>
+                <div class="med-detalhes" style="display: flex;">
+                    <div class="campo-group"><label>Tempo de uso:</label><input type="text" class="med-tempo" placeholder="ex: 2 meses"></div>
+                    <div class="campo-group"><label>Indicação:</label><input type="text" class="med-indicacao" placeholder="ex: artrite reumatoide"></div>
+                </div>
+            `;
+            container.appendChild(div);
+            atualizarResumo();
+        }
+
+        function toggleDetalhesMed(checkbox) {
+            const itemCard = checkbox.closest('.item-card');
+            const detalhesDiv = itemCard.querySelector('.med-detalhes');
+            detalhesDiv.style.display = checkbox.checked ? 'flex' : 'none';
         }
 
         function toggleTempoSintoma(checkbox) {
@@ -741,17 +845,25 @@
                 });
             }
             
-            // Medicamentos
+            // Medicamentos com detalhes
             const medicamentos = [];
             document.querySelectorAll('#medicamentos .item-card').forEach(card => {
                 const cb = card.querySelector('input[type="checkbox"]');
                 if (cb && cb.checked) {
-                    let nome = card.querySelector('label')?.innerText || '';
+                    let nome = card.querySelector('label')?.innerText || card.querySelector('input[type="text"]')?.value || 'Medicamento';
                     const dose = card.querySelector('.med-dose')?.value;
-                    const via = card.querySelector('select')?.value;
+                    const via = card.querySelector('.med-via')?.value;
+                    const tempo = card.querySelector('.med-tempo')?.value;
+                    const indicacao = card.querySelector('.med-indicacao')?.value;
+                    
+                    let detalhes = [];
+                    if (via) detalhes.push(via);
+                    if (dose) detalhes.push(dose);
+                    if (tempo) detalhes.push(`uso: ${tempo}`);
+                    if (indicacao) detalhes.push(`para: ${indicacao}`);
+                    
                     let txt = nome;
-                    if (via) txt += ` (${via})`;
-                    if (dose) txt += ` ${dose}`;
+                    if (detalhes.length > 0) txt += ` (${detalhes.join(', ')})`;
                     medicamentos.push(txt);
                 }
             });
@@ -801,7 +913,7 @@
                 }
             }
             
-            // Exame físico
+            // Exame físico geral
             hda.push("\n🩻 EXAME FÍSICO:");
             const pa = document.getElementById('pa').value || 'N/I';
             const fc = document.getElementById('fc').value || 'N/I';
@@ -814,6 +926,34 @@
             
             const ap = document.getElementById('ap').value;
             if (ap) hda.push(`AP: ${ap}`);
+            
+            const abdome = document.getElementById('abdome').value;
+            if (abdome) hda.push(`Abdome: ${abdome}`);
+            
+            // Exame físico reumatológico
+            const articulacoes = document.getElementById('articulacoes').value;
+            const forca = document.getElementById('forca').value;
+            const deformidades = document.getElementById('deformidades').value;
+            const nodulos = document.getElementById('nodulos').value;
+            const derrame = document.getElementById('derrame').value;
+            const marcha = document.getElementById('marcha').value;
+            const edema = document.getElementById('edema').value;
+            const pele = document.getElementById('pele').value;
+            
+            let exameReuma = [];
+            if (articulacoes) exameReuma.push(`Articulações: ${articulacoes}`);
+            if (forca) exameReuma.push(`Força: ${forca}`);
+            if (deformidades) exameReuma.push(`Deformidades: ${deformidades}`);
+            if (nodulos) exameReuma.push(`Nódulos: ${nodulos}`);
+            if (derrame) exameReuma.push(`Derrame: ${derrame}`);
+            if (marcha) exameReuma.push(`Marcha: ${marcha}`);
+            if (edema) exameReuma.push(`Edema: ${edema}`);
+            if (pele) exameReuma.push(`Pele: ${pele}`);
+            
+            if (exameReuma.length > 0) {
+                hda.push("\n🔬 EXAME REUMATOLÓGICO:");
+                hda.push(exameReuma.join('; '));
+            }
             
             const extrem = document.getElementById('extrem').value;
             if (extrem) hda.push(`Extremidades: ${extrem}`);
@@ -836,8 +976,13 @@
             container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
                 cb.checked = check;
                 const card = cb.closest('.item-card');
-                const tempoDiv = card?.querySelector('.tempo-controle');
-                if (tempoDiv) tempoDiv.style.display = check ? 'flex' : 'none';
+                if (sectionId === 'medicamentos') {
+                    const detalhesDiv = card?.querySelector('.med-detalhes');
+                    if (detalhesDiv) detalhesDiv.style.display = check ? 'flex' : 'none';
+                } else {
+                    const tempoDiv = card?.querySelector('.tempo-controle');
+                    if (tempoDiv) tempoDiv.style.display = check ? 'flex' : 'none';
+                }
             });
             atualizarResumo();
             if (sectionId === 'sinais') atualizarHD();
@@ -852,7 +997,7 @@
 
         function limparTudo() {
             document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
-            document.querySelectorAll('.tempo-controle').forEach(div => div.style.display = 'none');
+            document.querySelectorAll('.tempo-controle, .med-detalhes').forEach(div => div.style.display = 'none');
             document.querySelectorAll('input[type="text"], input[type="number"], select, textarea').forEach(field => field.value = '');
             document.getElementById('sexo').value = '';
             document.getElementById('raca').value = '';
@@ -862,6 +1007,29 @@
             atualizarResumo();
             atualizarHD();
             document.getElementById('resumoFinal').style.display = 'none';
+            
+            // Recria os medicamentos base (remove os "outros" adicionados)
+            const medContainer = document.getElementById('medicamentos');
+            let htmlMed = '';
+            medicamentosBase.forEach(m => {
+                htmlMed += `<div class="item-card">`;
+                htmlMed += `<div class="item-header">`;
+                htmlMed += `<input type="checkbox" class="med-check" onchange="toggleDetalhesMed(this)">`;
+                htmlMed += `<label>${m.nome}</label>`;
+                htmlMed += `</div>`;
+                htmlMed += `<div class="med-group">`;
+                if (m.opcoes) {
+                    htmlMed += `<select class="med-via"><option>${m.opcoes.join('</option><option>')}</option></select>`;
+                }
+                htmlMed += `<input type="text" class="med-dose" placeholder="dose (${m.unidade})" style="width:120px;">`;
+                htmlMed += `</div>`;
+                htmlMed += `<div class="med-detalhes" style="display: none;">`;
+                htmlMed += `<div class="campo-group"><label>Tempo de uso:</label><input type="text" class="med-tempo" placeholder="ex: 2 meses"></div>`;
+                htmlMed += `<div class="campo-group"><label>Indicação:</label><input type="text" class="med-indicacao" placeholder="ex: artrite reumatoide"></div>`;
+                htmlMed += `</div>`;
+                htmlMed += `</div>`;
+            });
+            medContainer.innerHTML = htmlMed;
         }
 
         window.onload = () => {
