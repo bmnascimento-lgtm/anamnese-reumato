@@ -1,129 +1,429 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<title>Gerador Reumatologia</title>
-<style>
-body { font-family: Arial; margin: 30px; }
-h2 { margin-top: 25px; }
-textarea { width: 100%; height: 150px; margin-top: 10px; }
-button { margin-top: 20px; padding: 10px; }
-.section { margin-bottom: 15px; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anamnese Reumatologia - Checklist Interativo</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f5f9;
+            padding: 20px;
+            color: #1e3c5c;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #0a2942;
+            margin-bottom: 20px;
+            font-size: 2.2rem;
+            border-bottom: 3px solid #4a90e2;
+            padding-bottom: 10px;
+        }
+        h2 {
+            background: #1e4a76;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px 8px 0 0;
+            font-size: 1.3rem;
+            margin-top: 20px;
+            margin-bottom: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        h2 button {
+            margin-left: auto;
+            background: white;
+            border: none;
+            border-radius: 4px;
+            padding: 4px 12px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            color: #1e4a76;
+            font-weight: bold;
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+            background: #d9e6f2;
+            padding: 15px;
+            border-radius: 0 0 8px 8px;
+            margin-bottom: 10px;
+        }
+        .item-card {
+            background: white;
+            border-radius: 8px;
+            padding: 12px 15px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: 0.2s;
+            border-left: 5px solid #4a90e2;
+        }
+        .item-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+        }
+        .item-card input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #1e4a76;
+        }
+        .item-card label {
+            font-weight: 600;
+            cursor: pointer;
+            flex-grow: 1;
+            color: #0a2942;
+        }
+        .item-card input[type="text"], 
+        .item-card input[type="number"] {
+            border: 1px solid #b0c8da;
+            border-radius: 4px;
+            padding: 4px 8px;
+            width: 90px;
+            font-size: 0.9rem;
+        }
+        .item-card select {
+            border: 1px solid #b0c8da;
+            border-radius: 4px;
+            padding: 4px;
+            background: white;
+        }
+        .small-input {
+            width: 60px !important;
+        }
+        .med-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+        .double-col {
+            grid-column: span 2;
+        }
+        .highlight {
+            background-color: #fff9e0;
+            border-left-color: #f5b042;
+        }
+        .footer-actions {
+            margin-top: 30px;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn {
+            background: #1e4a76;
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .btn:hover {
+            background: #0a2942;
+            transform: scale(1.02);
+        }
+        .btn.secondary {
+            background: #6c757d;
+        }
+        .btn.secondary:hover {
+            background: #495057;
+        }
+        .resumo-bar {
+            background: white;
+            border-radius: 50px;
+            padding: 15px 25px;
+            margin-top: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            font-size: 1.2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+        }
+        .resumo-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .badge {
+            background: #1e4a76;
+            color: white;
+            border-radius: 20px;
+            padding: 4px 16px;
+            font-weight: 600;
+        }
+        hr {
+            margin: 20px 0;
+            border: 1px dashed #b0c8da;
+        }
+        .obs-field {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            border: 1px solid #b0c8da;
+        }
+        textarea {
+            width: 100%;
+            border: 1px solid #b0c8da;
+            border-radius: 8px;
+            padding: 12px;
+            font-family: inherit;
+            font-size: 1rem;
+            resize: vertical;
+        }
+    </style>
 </head>
-
 <body>
+    <div class="container">
+        <h1>📋 Anamnese Reumatologia Completa <span style="font-size:1rem; font-weight:normal; margin-left:20px; color:#4a90e2;">Clique e marque durante a consulta</span></h1>
 
-<h1>Gerador Automático - Reumatologia</h1>
+        <!-- Resumo dinâmico -->
+        <div class="resumo-bar" id="resumo">
+            <span class="resumo-item"><span class="badge" id="totalMarcados">0</span> itens marcados</span>
+            <span class="resumo-item">📌 Queixa Principal: <span id="resumoQueixa" style="font-weight:600;">—</span></span>
+        </div>
 
-<h2>Sinais e Sintomas</h2>
+        <!-- QUEIXA PRINCIPAL / HDA -->
+        <div class="obs-field" style="margin-top:20px;">
+            <label style="font-weight:700; font-size:1.2rem;">🩺 Queixa Principal / História da Doença Atual:</label>
+            <textarea id="queixaPrincipal" rows="2" placeholder="Descreva a queixa principal e HDA..."></textarea>
+        </div>
 
-<div class="section">
-<label><input type="checkbox" value="rash_malar"> Rash malar</label><br>
-<label><input type="checkbox" value="fotossensibilidade"> Fotossensibilidade</label><br>
-<label><input type="checkbox" value="ulceras_orais"> Úlceras orais</label><br>
-<label><input type="checkbox" value="artrite_pequenas"> Artrite pequenas articulações</label><br>
-<label><input type="checkbox" value="rigidez_30"> Rigidez matinal >30min</label><br>
-<label><input type="checkbox" value="raynaud"> Fenômeno de Raynaud</label><br>
-<label><input type="checkbox" value="xerostomia"> Xerostomia</label><br>
-<label><input type="checkbox" value="xerftalmia"> Xeroftalmia</label><br>
-<label><input type="checkbox" value="lombalgia_inflamatoria"> Lombalgia inflamatória</label><br>
-<label><input type="checkbox" value="psoriase"> Psoríase</label><br>
-<label><input type="checkbox" value="uveite"> Uveíte</label><br>
-</div>
+        <!-- SINAIS E SINTOMAS (checkboxes) -->
+        <h2>🔍 SINAIS E SINTOMAS <button onclick="toggleAll('sinais', true)">Marcar todos</button><button onclick="toggleAll('sinais', false)" style="background:#f0f0f0; color:#333;">Limpar</button></h2>
+        <div class="card-grid" id="sinais">
+            <!-- Itens gerados via JS para facilitar manutenção -->
+        </div>
 
-<button onclick="gerarTexto()">Gerar Blocos Automáticos</button>
+        <!-- MEDICAMENTOS EM USO -->
+        <h2>💊 MEDICAMENTOS EM USO</h2>
+        <div class="card-grid" id="medicamentos">
+            <!-- gerado via js -->
+        </div>
 
-<h2>Resultado</h2>
-<textarea id="resultado"></textarea>
+        <!-- COMORBIDADES e HISTÓRICO -->
+        <h2>📌 COMORBIDADES / ANTECEDENTES</h2>
+        <div class="card-grid" id="comorbidades">
+            <!-- gerado via js -->
+        </div>
 
-<script>
+        <!-- EXAME FÍSICO E HIPÓTESE -->
+        <h2>🩻 EXAME FÍSICO E HIPÓTESE</h2>
+        <div class="card-grid">
+            <div class="item-card double-col">
+                <label>PA:</label>
+                <input type="text" placeholder="Ex: 120x80" id="pa" style="width:120px;">
+                <label style="margin-left:15px;">AC:</label>
+                <input type="text" placeholder="RR 2T" id="ac" style="width:150px;">
+            </div>
+            <div class="item-card double-col">
+                <label>AP:</label>
+                <input type="text" placeholder="MV+ sem RA" id="ap" style="width:200px;">
+                <label style="margin-left:15px;">Extremidades:</label>
+                <input type="text" placeholder="Sem edema" id="extrem" style="width:150px;">
+            </div>
+            <div class="item-card double-col">
+                <label style="font-weight:700;">Hipótese Diagnóstica:</label>
+                <input type="text" placeholder="Ex: AR, LES, etc" id="hipotese" style="flex-grow:1;">
+            </div>
+        </div>
 
-function gerarTexto(){
+        <!-- ANTECEDENTES FISIOLÓGICOS e CONDUTA -->
+        <h2>🧬 ANTECEDENTES FISIOLÓGICOS / CONDUTA</h2>
+        <div class="card-grid">
+            <div class="item-card"><input type="checkbox" id="menopausa"><label for="menopausa">Menopausa</label></div>
+            <div class="item-card"><input type="checkbox" id="reposHorm"><label for="reposHorm">Reposição Hormonal</label></div>
+            <div class="item-card">
+                <label>Menstruação:</label>
+                <select id="menstruacao">
+                    <option value="">--</option>
+                    <option>Regular</option>
+                    <option>Irregular</option>
+                </select>
+            </div>
+            <div class="item-card">
+                <label>Gestações: G</label><input type="number" id="g" class="small-input" min="0">
+                <label>P</label><input type="number" id="p" class="small-input" min="0">
+                <label>A</label><input type="number" id="a" class="small-input" min="0">
+            </div>
+            <div class="item-card double-col">
+                <label style="font-weight:700;">Conduta:</label>
+                <input type="text" id="conduta" placeholder="Descreva a conduta" style="flex-grow:1;">
+            </div>
+        </div>
 
-let checks = document.querySelectorAll('input[type=checkbox]:checked');
+        <!-- Botões de ação -->
+        <div class="footer-actions">
+            <button class="btn" onclick="gerarResumo()">📋 Gerar Resumo da Consulta</button>
+            <button class="btn secondary" onclick="limparTudo()">🔄 Nova Consulta (Limpar)</button>
+        </div>
+        <div id="resumoFinal" style="margin-top:30px; background:#e9f0f9; padding:20px; border-radius:12px; display:none; white-space:pre-wrap; font-family:monospace;"></div>
+    </div>
 
-let suspeitaLES = false;
-let suspeitaAR = false;
-let suspeitaSjogren = false;
-let suspeitaEspondilo = false;
-let suspeitaPsoriatica = false;
+    <script>
+        // Definição das seções
+        const sintomasLista = [
+            "RASH MALAR", "FOTOSSENSIBILIDADE", "ULCERAS ORAIS", "SEROSITE", "ANEMIA", 
+            "ARTRITE PEQUENAS ARTICULAÇÕES", "ARTRITE GRANDES ARTICULAÇÕES", "RIGIDEZ MATINAL >30 MIN", 
+            "RIGIDEZ MATINAL <30 MIN", "LINFADENOPATIA", "ALOPÉCIA DIFUSA", "ALOPÉCIA AREATA", 
+            "HEMATÚRIA", "CONVULSÃO", "CEFALÉIA", "RAYNAUD", "XEROSTOMIA", "XEROFTALMIA", 
+            "PAROTIDITE", "PARESTESIAS", "PETÉQUIAS", "PSORIASE", "OUTRAS LESOES CUTANEAS", 
+            "FEBRE", "EMAGRECIMENTO", "LOMBALGIA INFLAMATÓRIA", "LOMBALGIA MECÂNICA", "UVEÍTE", 
+            "OUTRAS LESÕES OCULARES", "FRAQUEZA MUSCULAR", "DISPNÉIA", "DISFAGIA", "TROMBOSE VENOSA", 
+            "TROMBOSE ARTERIAL"
+        ];
 
-checks.forEach(c => {
+        const medicamentosLista = [
+            { nome: "CORTICOIDES (prednisona)", unidade: "mg" },
+            { nome: "METOTREXATE", opcoes: ["VO cp/sem", "SC ml"] },
+            { nome: "LEFLUNOMIDA 20mg", fixo: true },
+            { nome: "AZATIOPRINA", unidade: "mg" },
+            { nome: "SULFASSALAZINA", unidade: "mg" },
+            { nome: "CLOROQUINA 250mg", fixo: true },
+            { nome: "HIDROXICLOROQUINA 400mg", fixo: true },
+            { nome: "CÁLCIO", check: true },
+            { nome: "VITAMINA D", check: true },
+            { nome: "ANTI-INFLAMATÓRIO", check: true },
+            { nome: "GLUCOSAMINA/CONDROITINA", check: true },
+            { nome: "DIACEREÍNA", check: true },
+            { nome: "AAS", check: true },
+            { nome: "ANTI-HIPERTENSIVOS", check: true },
+            { nome: "BIOLÓGICOS (Adalimumabe, etc)", unidade: "mg" }
+        ];
 
-if(c.value === "rash_malar" || c.value === "fotossensibilidade" || c.value === "ulceras_orais"){
-suspeitaLES = true;
-}
+        const comorbidadesLista = [
+            "INFECÇÕES URINÁRIAS DE REPETIÇÃO", "ANSIEDADE", "DEPRESSÃO", "SONO NÃO RESTAURADOR",
+            "NEFROLITÍASE", "CANCER", "ENXAQUECA", "OSTEOPOROSE", "AR (ARTRITE REUMATÓIDE?)",
+            "PSORIASE", "LES", "IAM", "HAS", "DM", "GOTA", "ARTROSE", "OSTEOPOROSE COM FRATURA",
+            "FIBROMIALGIA", "DIÁRIO (tabagismo?)", "DROGAS ILÍCITAS", "EX-USUÁRIO", "DROGAS INJETÁVEIS",
+            "MACONHA E OUTRAS"
+        ];
 
-if(c.value === "artrite_pequenas" || c.value === "rigidez_30"){
-suspeitaAR = true;
-}
+        function gerarCheckboxes() {
+            let htmlSinais = '';
+            sintomasLista.forEach(s => {
+                htmlSinais += `<div class="item-card"><input type="checkbox" class="sinal" value="${s}"><label>${s}</label></div>`;
+            });
+            document.getElementById('sinais').innerHTML = htmlSinais;
 
-if(c.value === "xerostomia" || c.value === "xerftalmia"){
-suspeitaSjogren = true;
-}
+            let htmlMed = '';
+            medicamentosLista.forEach(m => {
+                if (m.fixo) {
+                    htmlMed += `<div class="item-card"><input type="checkbox"><label>${m.nome}</label></div>`;
+                } else if (m.unidade) {
+                    htmlMed += `<div class="item-card"><input type="checkbox"><label>${m.nome}</label><input type="text" placeholder="dose (${m.unidade})" style="width:100px;"></div>`;
+                } else if (m.opcoes) {
+                    htmlMed += `<div class="item-card"><input type="checkbox"><label>${m.nome}</label><select><option>${m.opcoes[0]}</option><option>${m.opcoes[1]}</option></select><input type="text" placeholder="dose" style="width:70px;"></div>`;
+                } else if (m.check) {
+                    htmlMed += `<div class="item-card"><input type="checkbox"><label>${m.nome}</label></div>`;
+                }
+            });
+            document.getElementById('medicamentos').innerHTML = htmlMed;
 
-if(c.value === "lombalgia_inflamatoria" || c.value === "uveite"){
-suspeitaEspondilo = true;
-}
+            let htmlComorb = '';
+            comorbidadesLista.forEach(c => {
+                htmlComorb += `<div class="item-card"><input type="checkbox" class="comorb"><label>${c}</label></div>`;
+            });
+            document.getElementById('comorbidades').innerHTML = htmlComorb;
+        }
 
-if(c.value === "psoriase"){
-suspeitaPsoriatica = true;
-}
+        function toggleAll(sectionId, check) {
+            const container = document.getElementById(sectionId);
+            const checkboxes = container.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(cb => cb.checked = check);
+            atualizarResumo();
+        }
 
-});
+        function atualizarResumo() {
+            const total = document.querySelectorAll('input[type="checkbox"]:checked').length;
+            document.getElementById('totalMarcados').innerText = total;
+            const queixa = document.getElementById('queixaPrincipal').value.trim();
+            document.getElementById('resumoQueixa').innerText = queixa.substring(0,30) + (queixa.length>30?'...':'') || '—';
+        }
 
-let exames = "";
-let hipotese = "";
-let conduta = "";
+        function gerarResumo() {
+            // coleta dados
+            let linhas = [];
+            linhas.push('==== RESUMO DA ANAMNESE ====\n');
+            linhas.push('Queixa Principal: ' + document.getElementById('queixaPrincipal').value);
+            linhas.push('Hipotese Diagnóstica: ' + document.getElementById('hipotese').value + '\n');
 
+            let sinais = [];
+            document.querySelectorAll('#sinais input:checked').forEach(cb => sinais.push(cb.value));
+            linhas.push('Sinais/Sintomas +: ' + (sinais.join(', ') || 'nenhum'));
 
-// LES
-if(suspeitaLES){
-exames += "- FAN, anti-dsDNA, anti-Sm, C3, C4, EAS, proteinúria 24h\n";
-hipotese += "- Lúpus Eritematoso Sistêmico\n";
-conduta += "- Avaliar atividade (SLEDAI), iniciar hidroxicloroquina 400mg/dia se confirmado\n";
-}
+            linhas.push('\nMedicamentos em uso:');
+            let meds = [];
+            document.querySelectorAll('#medicamentos .item-card').forEach(card => {
+                const cb = card.querySelector('input[type="checkbox"]');
+                if (cb && cb.checked) {
+                    let txt = card.querySelector('label')?.innerText || '';
+                    const dose = card.querySelector('input[type="text"]')?.value;
+                    const select = card.querySelector('select')?.value;
+                    if (dose) txt += ' ' + dose;
+                    if (select) txt += ' ' + select;
+                    meds.push(txt);
+                }
+            });
+            linhas.push(meds.join('; ') || 'nenhum');
 
-// AR
-if(suspeitaAR){
-exames += "- FR, anti-CCP, VHS, PCR, RX mãos e pés\n";
-hipotese += "- Artrite Reumatoide\n";
-conduta += "- Iniciar metotrexate 15mg/sem se confirmado\n";
-}
+            linhas.push('\nComorbidades:');
+            let com = [];
+            document.querySelectorAll('#comorbidades input:checked').forEach(cb => com.push(cb.value));
+            linhas.push(com.join(', ') || 'nenhuma');
 
-// Sjogren
-if(suspeitaSjogren){
-exames += "- Anti-SSA, anti-SSB, teste de Schirmer\n";
-hipotese += "- Síndrome de Sjögren\n";
-conduta += "- Tratamento sintomático + avaliar necessidade de imunossupressor\n";
-}
+            linhas.push('\nExame Físico:');
+            linhas.push('PA: ' + document.getElementById('pa').value);
+            linhas.push('AC: ' + document.getElementById('ac').value);
+            linhas.push('AP: ' + document.getElementById('ap').value);
+            linhas.push('Extrem: ' + document.getElementById('extrem').value);
 
-// Espondiloartrite
-if(suspeitaEspondilo){
-exames += "- HLA-B27, RX sacroilíacas\n";
-hipotese += "- Espondiloartrite\n";
-conduta += "- Iniciar AINE e avaliar biológico se refratário\n";
-}
+            linhas.push('\nAntecedentes:');
+            if(document.getElementById('menopausa').checked) linhas.push('Menopausa');
+            if(document.getElementById('reposHorm').checked) linhas.push('Reposição Hormonal');
+            linhas.push('Menstruação: ' + document.getElementById('menstruacao').value);
+            linhas.push(`G:${document.getElementById('g').value} P:${document.getElementById('p').value} A:${document.getElementById('a').value}`);
 
-// Psoriática
-if(suspeitaPsoriatica){
-exames += "- PCR, RX articulações acometidas\n";
-hipotese += "- Artrite Psoriásica\n";
-conduta += "- Metotrexate ou biológico conforme atividade\n";
-}
+            linhas.push('\nConduta: ' + document.getElementById('conduta').value);
 
-document.getElementById("resultado").value =
-"---EXAMES PRINCIPAIS\n" +
-exames +
-"\n---HIPÓTESE DIAGNÓSTICA\n" +
-hipotese +
-"\n---CONDUTA\n" +
-conduta;
+            const resumoDiv = document.getElementById('resumoFinal');
+            resumoDiv.style.display = 'block';
+            resumoDiv.innerText = linhas.join('\n');
+        }
 
-}
+        function limparTudo() {
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+            document.querySelectorAll('input[type="text"], input[type="number"], select, textarea').forEach(field => field.value = '');
+            document.getElementById('menstruacao').value = '';
+            document.getElementById('g').value = ''; document.getElementById('p').value = ''; document.getElementById('a').value = '';
+            atualizarResumo();
+            document.getElementById('resumoFinal').style.display = 'none';
+        }
 
-</script>
-
+        // Inicialização e listeners
+        window.onload = () => {
+            gerarCheckboxes();
+            // Atualiza resumo a cada interação
+            document.addEventListener('change', atualizarResumo);
+            document.addEventListener('input', atualizarResumo);
+        };
+    </script>
 </body>
 </html>
