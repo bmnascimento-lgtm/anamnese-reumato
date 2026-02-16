@@ -2,26 +2,26 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Anamnese Reumatológica</title>
+<title>Anamnese Reumatológica Avançada</title>
 
 <style>
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f6f8;
-    padding: 30px;
+    background-color: #eef2f7;
+    padding: 20px;
 }
 
 .container {
     background: white;
     padding: 25px;
     border-radius: 10px;
-    max-width: 700px;
+    max-width: 900px;
     margin: auto;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
 }
 
-h2 {
-    text-align: center;
+h2, h3 {
+    margin-top: 25px;
 }
 
 select, button {
@@ -48,44 +48,88 @@ button:hover {
     background: #f1f3f5;
     padding: 15px;
     border-radius: 6px;
-    min-height: 80px;
+    min-height: 120px;
     margin-top: 10px;
+    white-space: pre-wrap;
 }
 
 .mensagem {
     color: green;
     font-weight: bold;
-    margin-top: 10px;
 }
 </style>
-
 </head>
+
 <body>
 
 <div class="container">
 <h2>Gerador de Anamnese Reumatológica</h2>
 
-<label>Início do quadro:</label>
+<h3>Características da Dor</h3>
+
+<label>Início:</label>
 <select id="inicio">
-  <option value="súbito">Súbito</option>
-  <option value="insidioso">Insidioso</option>
+<option value="súbito">Súbito</option>
+<option value="insidioso">Insidioso</option>
+<option value="progressivo">Progressivo</option>
 </select>
 
 <label>Tempo de evolução:</label>
 <select id="tempo">
-  <option value="há menos de 6 semanas">Menos de 6 semanas</option>
-  <option value="há mais de 6 semanas">Mais de 6 semanas</option>
+<option value="há menos de 6 semanas">Menos de 6 semanas</option>
+<option value="há mais de 6 semanas">Mais de 6 semanas</option>
+<option value="há mais de 6 meses">Mais de 6 meses</option>
+</select>
+
+<label>Padrão articular:</label>
+<select id="padrao">
+<option value="monoarticular">Monoarticular</option>
+<option value="oligoarticular">Oligoarticular</option>
+<option value="poliarticular">Poliarticular</option>
+<option value="migratório">Migratório</option>
+<option value="aditivo">Aditivo</option>
 </select>
 
 <label>Rigidez matinal:</label>
 <select id="rigidez">
-  <option value="inferior a 30 minutos">Menos de 30 minutos</option>
-  <option value="superior a 1 hora">Mais de 1 hora</option>
+<option value="inferior a 30 minutos">Menos de 30 minutos</option>
+<option value="entre 30 minutos e 1 hora">30 min a 1 hora</option>
+<option value="superior a 1 hora">Mais de 1 hora</option>
 </select>
 
+<label>Dor melhora com movimento?</label>
+<select id="movimento">
+<option value="melhora com movimento">Sim</option>
+<option value="não melhora com movimento">Não</option>
+</select>
+
+<h3>Manifestações Sistêmicas</h3>
+
 <label><input type="checkbox" id="febre"> Febre</label><br>
+<label><input type="checkbox" id="perdaPeso"> Perda de peso</label><br>
 <label><input type="checkbox" id="rash"> Rash cutâneo</label><br>
-<label><input type="checkbox" id="raynaud"> Fenômeno de Raynaud</label><br><br>
+<label><input type="checkbox" id="raynaud"> Fenômeno de Raynaud</label><br>
+<label><input type="checkbox" id="ulcera"> Úlcera oral</label><br>
+<label><input type="checkbox" id="alopecia"> Alopecia</label><br><br>
+
+<h3>ISDA (Autoavaliação)</h3>
+<label>Intensidade da dor (0-10):</label>
+<select id="isda">
+<option value="0">0</option>
+<option value="2">2</option>
+<option value="4">4</option>
+<option value="6">6</option>
+<option value="8">8</option>
+<option value="10">10</option>
+</select>
+
+<h3>Exame Físico</h3>
+
+<label><input type="checkbox" id="edema"> Edema articular</label><br>
+<label><input type="checkbox" id="calor"> Calor local</label><br>
+<label><input type="checkbox" id="rubor"> Rubor</label><br>
+<label><input type="checkbox" id="limitacao"> Limitação funcional</label><br>
+<label><input type="checkbox" id="deformidade"> Deformidade</label><br><br>
 
 <button onclick="gerarHDA()">Gerar HDA</button>
 
@@ -93,51 +137,75 @@ button:hover {
 <div id="resultado"></div>
 
 <button onclick="copiarTexto()">Copiar texto</button>
-
 <div id="mensagem" class="mensagem"></div>
 
 </div>
 
 <script>
+
 function gerarHDA() {
-  let inicio = document.getElementById("inicio").value;
-  let tempo = document.getElementById("tempo").value;
-  let rigidez = document.getElementById("rigidez").value;
 
-  let sintomas = [];
+let inicio = document.getElementById("inicio").value;
+let tempo = document.getElementById("tempo").value;
+let padrao = document.getElementById("padrao").value;
+let rigidez = document.getElementById("rigidez").value;
+let movimento = document.getElementById("movimento").value;
+let isda = document.getElementById("isda").value;
 
-  if(document.getElementById("febre").checked) sintomas.push("febre");
-  if(document.getElementById("rash").checked) sintomas.push("rash cutâneo");
-  if(document.getElementById("raynaud").checked) sintomas.push("fenômeno de Raynaud");
+let sintomas = [];
+let exame = [];
 
-  let texto = "Paciente refere quadro de dor articular de início " + inicio +
-              ", com evolução " + tempo +
-              ", apresentando rigidez matinal " + rigidez + ".";
+if(febre.checked) sintomas.push("febre");
+if(perdaPeso.checked) sintomas.push("perda de peso");
+if(rash.checked) sintomas.push("rash cutâneo");
+if(raynaud.checked) sintomas.push("fenômeno de Raynaud");
+if(ulcera.checked) sintomas.push("úlceras orais");
+if(alopecia.checked) sintomas.push("alopecia");
 
-  if(sintomas.length > 0){
-      texto += " Associado a " + sintomas.join(", ") + ".";
-  } else {
-      texto += " Nega sintomas sistêmicos.";
-  }
+if(edema.checked) exame.push("edema articular");
+if(calor.checked) exame.push("calor local");
+if(rubor.checked) exame.push("rubor");
+if(limitacao.checked) exame.push("limitação funcional");
+if(deformidade.checked) exame.push("deformidades");
 
-  document.getElementById("resultado").innerText = texto;
-  document.getElementById("mensagem").innerText = "";
+let texto = "Paciente refere quadro de dor articular de início " + inicio +
+", com evolução " + tempo +
+", padrão " + padrao +
+", apresentando rigidez matinal " + rigidez +
+", que " + movimento + ".\n\n";
+
+texto += "ISDA (autoavaliação da dor): " + isda + "/10.\n\n";
+
+if(sintomas.length > 0){
+texto += "Relata ainda " + sintomas.join(", ") + ".\n\n";
+}else{
+texto += "Nega manifestações sistêmicas relevantes.\n\n";
+}
+
+if(exame.length > 0){
+texto += "Ao exame físico observam-se " + exame.join(", ") + ".";
+}else{
+texto += "Exame físico sem sinais inflamatórios evidentes.";
+}
+
+document.getElementById("resultado").innerText = texto;
+document.getElementById("mensagem").innerText = "";
+
 }
 
 function copiarTexto() {
-  let texto = document.getElementById("resultado").innerText;
+let texto = document.getElementById("resultado").innerText;
 
-  if(texto.trim() === ""){
-    document.getElementById("mensagem").innerText = "Nada para copiar.";
-    return;
-  }
-
-  navigator.clipboard.writeText(texto).then(function() {
-    document.getElementById("mensagem").innerText = "Texto copiado com sucesso!";
-  }, function(err) {
-    document.getElementById("mensagem").innerText = "Erro ao copiar.";
-  });
+if(texto.trim() === ""){
+document.getElementById("mensagem").innerText = "Nada para copiar.";
+return;
 }
+
+navigator.clipboard.writeText(texto).then(function() {
+document.getElementById("mensagem").innerText = "Texto copiado com sucesso!";
+});
+}
+
 </script>
 
 </body>
