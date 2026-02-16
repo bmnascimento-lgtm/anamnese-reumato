@@ -2,208 +2,125 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Anamnese Reumatológica Avançada</title>
-
+<title>Gerador Reumatologia</title>
 <style>
-body {
-    font-family: Arial, sans-serif;
-    background-color: #eef2f7;
-    padding: 20px;
-}
-
-.container {
-    background: white;
-    padding: 25px;
-    border-radius: 10px;
-    max-width: 900px;
-    margin: auto;
-    box-shadow: 0 0 15px rgba(0,0,0,0.1);
-}
-
-h2, h3 {
-    margin-top: 25px;
-}
-
-select, button {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    margin-bottom: 15px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-}
-
-button {
-    background-color: #2c7be5;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #1a68d1;
-}
-
-#resultado {
-    background: #f1f3f5;
-    padding: 15px;
-    border-radius: 6px;
-    min-height: 120px;
-    margin-top: 10px;
-    white-space: pre-wrap;
-}
-
-.mensagem {
-    color: green;
-    font-weight: bold;
-}
+body { font-family: Arial; margin: 30px; }
+h2 { margin-top: 25px; }
+textarea { width: 100%; height: 150px; margin-top: 10px; }
+button { margin-top: 20px; padding: 10px; }
+.section { margin-bottom: 15px; }
 </style>
 </head>
 
 <body>
 
-<div class="container">
-<h2>Gerador de Anamnese Reumatológica</h2>
+<h1>Gerador Automático - Reumatologia</h1>
 
-<h3>Características da Dor</h3>
+<h2>Sinais e Sintomas</h2>
 
-<label>Início:</label>
-<select id="inicio">
-<option value="súbito">Súbito</option>
-<option value="insidioso">Insidioso</option>
-<option value="progressivo">Progressivo</option>
-</select>
-
-<label>Tempo de evolução:</label>
-<select id="tempo">
-<option value="há menos de 6 semanas">Menos de 6 semanas</option>
-<option value="há mais de 6 semanas">Mais de 6 semanas</option>
-<option value="há mais de 6 meses">Mais de 6 meses</option>
-</select>
-
-<label>Padrão articular:</label>
-<select id="padrao">
-<option value="monoarticular">Monoarticular</option>
-<option value="oligoarticular">Oligoarticular</option>
-<option value="poliarticular">Poliarticular</option>
-<option value="migratório">Migratório</option>
-<option value="aditivo">Aditivo</option>
-</select>
-
-<label>Rigidez matinal:</label>
-<select id="rigidez">
-<option value="inferior a 30 minutos">Menos de 30 minutos</option>
-<option value="entre 30 minutos e 1 hora">30 min a 1 hora</option>
-<option value="superior a 1 hora">Mais de 1 hora</option>
-</select>
-
-<label>Dor melhora com movimento?</label>
-<select id="movimento">
-<option value="melhora com movimento">Sim</option>
-<option value="não melhora com movimento">Não</option>
-</select>
-
-<h3>Manifestações Sistêmicas</h3>
-
-<label><input type="checkbox" id="febre"> Febre</label><br>
-<label><input type="checkbox" id="perdaPeso"> Perda de peso</label><br>
-<label><input type="checkbox" id="rash"> Rash cutâneo</label><br>
-<label><input type="checkbox" id="raynaud"> Fenômeno de Raynaud</label><br>
-<label><input type="checkbox" id="ulcera"> Úlcera oral</label><br>
-<label><input type="checkbox" id="alopecia"> Alopecia</label><br><br>
-
-<h3>ISDA (Autoavaliação)</h3>
-<label>Intensidade da dor (0-10):</label>
-<select id="isda">
-<option value="0">0</option>
-<option value="2">2</option>
-<option value="4">4</option>
-<option value="6">6</option>
-<option value="8">8</option>
-<option value="10">10</option>
-</select>
-
-<h3>Exame Físico</h3>
-
-<label><input type="checkbox" id="edema"> Edema articular</label><br>
-<label><input type="checkbox" id="calor"> Calor local</label><br>
-<label><input type="checkbox" id="rubor"> Rubor</label><br>
-<label><input type="checkbox" id="limitacao"> Limitação funcional</label><br>
-<label><input type="checkbox" id="deformidade"> Deformidade</label><br><br>
-
-<button onclick="gerarHDA()">Gerar HDA</button>
-
-<h3>Resultado:</h3>
-<div id="resultado"></div>
-
-<button onclick="copiarTexto()">Copiar texto</button>
-<div id="mensagem" class="mensagem"></div>
-
+<div class="section">
+<label><input type="checkbox" value="rash_malar"> Rash malar</label><br>
+<label><input type="checkbox" value="fotossensibilidade"> Fotossensibilidade</label><br>
+<label><input type="checkbox" value="ulceras_orais"> Úlceras orais</label><br>
+<label><input type="checkbox" value="artrite_pequenas"> Artrite pequenas articulações</label><br>
+<label><input type="checkbox" value="rigidez_30"> Rigidez matinal >30min</label><br>
+<label><input type="checkbox" value="raynaud"> Fenômeno de Raynaud</label><br>
+<label><input type="checkbox" value="xerostomia"> Xerostomia</label><br>
+<label><input type="checkbox" value="xerftalmia"> Xeroftalmia</label><br>
+<label><input type="checkbox" value="lombalgia_inflamatoria"> Lombalgia inflamatória</label><br>
+<label><input type="checkbox" value="psoriase"> Psoríase</label><br>
+<label><input type="checkbox" value="uveite"> Uveíte</label><br>
 </div>
+
+<button onclick="gerarTexto()">Gerar Blocos Automáticos</button>
+
+<h2>Resultado</h2>
+<textarea id="resultado"></textarea>
 
 <script>
 
-function gerarHDA() {
+function gerarTexto(){
 
-let inicio = document.getElementById("inicio").value;
-let tempo = document.getElementById("tempo").value;
-let padrao = document.getElementById("padrao").value;
-let rigidez = document.getElementById("rigidez").value;
-let movimento = document.getElementById("movimento").value;
-let isda = document.getElementById("isda").value;
+let checks = document.querySelectorAll('input[type=checkbox]:checked');
 
-let sintomas = [];
-let exame = [];
+let suspeitaLES = false;
+let suspeitaAR = false;
+let suspeitaSjogren = false;
+let suspeitaEspondilo = false;
+let suspeitaPsoriatica = false;
 
-if(febre.checked) sintomas.push("febre");
-if(perdaPeso.checked) sintomas.push("perda de peso");
-if(rash.checked) sintomas.push("rash cutâneo");
-if(raynaud.checked) sintomas.push("fenômeno de Raynaud");
-if(ulcera.checked) sintomas.push("úlceras orais");
-if(alopecia.checked) sintomas.push("alopecia");
+checks.forEach(c => {
 
-if(edema.checked) exame.push("edema articular");
-if(calor.checked) exame.push("calor local");
-if(rubor.checked) exame.push("rubor");
-if(limitacao.checked) exame.push("limitação funcional");
-if(deformidade.checked) exame.push("deformidades");
-
-let texto = "Paciente refere quadro de dor articular de início " + inicio +
-", com evolução " + tempo +
-", padrão " + padrao +
-", apresentando rigidez matinal " + rigidez +
-", que " + movimento + ".\n\n";
-
-texto += "ISDA (autoavaliação da dor): " + isda + "/10.\n\n";
-
-if(sintomas.length > 0){
-texto += "Relata ainda " + sintomas.join(", ") + ".\n\n";
-}else{
-texto += "Nega manifestações sistêmicas relevantes.\n\n";
+if(c.value === "rash_malar" || c.value === "fotossensibilidade" || c.value === "ulceras_orais"){
+suspeitaLES = true;
 }
 
-if(exame.length > 0){
-texto += "Ao exame físico observam-se " + exame.join(", ") + ".";
-}else{
-texto += "Exame físico sem sinais inflamatórios evidentes.";
+if(c.value === "artrite_pequenas" || c.value === "rigidez_30"){
+suspeitaAR = true;
 }
 
-document.getElementById("resultado").innerText = texto;
-document.getElementById("mensagem").innerText = "";
-
+if(c.value === "xerostomia" || c.value === "xerftalmia"){
+suspeitaSjogren = true;
 }
 
-function copiarTexto() {
-let texto = document.getElementById("resultado").innerText;
-
-if(texto.trim() === ""){
-document.getElementById("mensagem").innerText = "Nada para copiar.";
-return;
+if(c.value === "lombalgia_inflamatoria" || c.value === "uveite"){
+suspeitaEspondilo = true;
 }
 
-navigator.clipboard.writeText(texto).then(function() {
-document.getElementById("mensagem").innerText = "Texto copiado com sucesso!";
+if(c.value === "psoriase"){
+suspeitaPsoriatica = true;
+}
+
 });
+
+let exames = "";
+let hipotese = "";
+let conduta = "";
+
+
+// LES
+if(suspeitaLES){
+exames += "- FAN, anti-dsDNA, anti-Sm, C3, C4, EAS, proteinúria 24h\n";
+hipotese += "- Lúpus Eritematoso Sistêmico\n";
+conduta += "- Avaliar atividade (SLEDAI), iniciar hidroxicloroquina 400mg/dia se confirmado\n";
+}
+
+// AR
+if(suspeitaAR){
+exames += "- FR, anti-CCP, VHS, PCR, RX mãos e pés\n";
+hipotese += "- Artrite Reumatoide\n";
+conduta += "- Iniciar metotrexate 15mg/sem se confirmado\n";
+}
+
+// Sjogren
+if(suspeitaSjogren){
+exames += "- Anti-SSA, anti-SSB, teste de Schirmer\n";
+hipotese += "- Síndrome de Sjögren\n";
+conduta += "- Tratamento sintomático + avaliar necessidade de imunossupressor\n";
+}
+
+// Espondiloartrite
+if(suspeitaEspondilo){
+exames += "- HLA-B27, RX sacroilíacas\n";
+hipotese += "- Espondiloartrite\n";
+conduta += "- Iniciar AINE e avaliar biológico se refratário\n";
+}
+
+// Psoriática
+if(suspeitaPsoriatica){
+exames += "- PCR, RX articulações acometidas\n";
+hipotese += "- Artrite Psoriásica\n";
+conduta += "- Metotrexate ou biológico conforme atividade\n";
+}
+
+document.getElementById("resultado").value =
+"---EXAMES PRINCIPAIS\n" +
+exames +
+"\n---HIPÓTESE DIAGNÓSTICA\n" +
+hipotese +
+"\n---CONDUTA\n" +
+conduta;
+
 }
 
 </script>
