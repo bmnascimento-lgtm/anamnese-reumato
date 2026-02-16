@@ -119,10 +119,6 @@
         .double-col {
             grid-column: span 2;
         }
-        .highlight {
-            background-color: #fff9e0;
-            border-left-color: #f5b042;
-        }
         .footer-actions {
             margin-top: 30px;
             display: flex;
@@ -235,6 +231,11 @@
             border-radius: 20px;
             font-weight: bold;
         }
+        .imc-class {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+        }
         .hd-box {
             background: white;
             border-radius: 12px;
@@ -256,6 +257,15 @@
             margin: 5px 0;
             border-left: 3px solid #ffc107;
         }
+        .conduta-gerada {
+            background: #e8f4fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-family: 'Segoe UI', monospace;
+            white-space: pre-wrap;
+            border: 1px solid #4a90e2;
+        }
     </style>
 </head>
 <body>
@@ -269,11 +279,21 @@
         <div class="paciente-info">
             <div class="info-field">
                 <label>Sexo:</label>
-                <select id="sexo">
+                <select id="sexo" onchange="atualizarVisibilidadeFisiologico()">
                     <option value="">Selecione</option>
                     <option value="F">Feminino</option>
                     <option value="M">Masculino</option>
-                    <option value="Outro">Outro</option>
+                </select>
+            </div>
+            <div class="info-field">
+                <label>Raça/Cor:</label>
+                <select id="raca">
+                    <option value="">Selecione</option>
+                    <option>Branca</option>
+                    <option>Preta</option>
+                    <option>Parda</option>
+                    <option>Amarela</option>
+                    <option>Indígena</option>
                 </select>
             </div>
             <div class="info-field">
@@ -291,6 +311,7 @@
             <div class="info-field">
                 <label>IMC:</label>
                 <div class="imc-result" id="imc">-</div>
+                <div class="imc-class" id="imcClass"></div>
             </div>
         </div>
 
@@ -312,7 +333,7 @@
         <div class="card-grid" id="sinais"></div>
 
         <!-- MEDICAMENTOS EM USO -->
-        <h2>💊 MEDICAMENTOS EM USO <button onclick="adicionarMedicamento()">+ Adicionar outro</button></h2>
+        <h2>💊 MEDICAMENTOS EM USO</h2>
         <div class="card-grid" id="medicamentos"></div>
 
         <!-- COMORBIDADES e HISTÓRICO -->
@@ -327,6 +348,14 @@
                 <input type="text" placeholder="Ex: 120x80" id="pa" style="width:120px;">
                 <label style="margin-left:15px;">FC:</label>
                 <input type="text" placeholder="bpm" id="fc" style="width:80px;">
+                <label style="margin-left:15px;">FR:</label>
+                <input type="text" placeholder="irpm" id="fr" style="width:80px;">
+            </div>
+            <div class="item-card double-col">
+                <label>Temperatura:</label>
+                <input type="text" placeholder="°C" id="temp" style="width:80px;">
+                <label style="margin-left:15px;">Sat O2:</label>
+                <input type="text" placeholder="%" id="sat" style="width:80px;">
             </div>
             <div class="item-card double-col">
                 <label>AC:</label>
@@ -344,46 +373,53 @@
 
         <!-- HD Automática e Conduta -->
         <div class="hd-box" id="hdBox">
-            <div class="hd-title">🤖 Sugestão de Hipótese Diagnóstica (baseada nos sintomas)</div>
+            <div class="hd-title">🤖 Hipótese Diagnóstica (baseada nos sintomas)</div>
             <div id="sugestaoHD" class="sugestao-item">Preencha os sintomas para ver sugestões...</div>
             
             <div class="hd-title" style="margin-top:20px;">📝 Hipótese Diagnóstica Final</div>
-            <input type="text" id="hipotese" placeholder="Digite a hipótese diagnóstica..." style="width:100%; padding:12px; border-radius:8px; border:1px solid #b0c8da; font-size:1rem; margin-bottom:20px;">
+            <input type="text" id="hipotese" placeholder="Digite a hipótese diagnóstica..." style="width:100%; padding:12px; border-radius:8px; border:1px solid #b0c8da; font-size:1rem; margin-bottom:10px;">
             
-            <div class="hd-title">💡 Conduta Sugerida (baseada na HD)</div>
-            <div id="sugestaoConduta" class="sugestao-item">Selecione uma hipótese para ver sugestões de conduta...</div>
+            <button class="btn success" onclick="gerarCondutaAutomatica()" style="margin:10px 0;">⚡ Gerar Conduta Automática</button>
             
-            <div class="hd-title" style="margin-top:20px;">📋 Conduta Final</div>
-            <textarea id="conduta" rows="3" placeholder="Descreva a conduta final..."></textarea>
+            <div class="hd-title" style="margin-top:20px;">📋 Conduta Gerada</div>
+            <div id="condutaGerada" class="conduta-gerada">Clique em "Gerar Conduta Automática" após definir a hipótese...</div>
+            
+            <div class="hd-title" style="margin-top:20px;">📝 Conduta Final (editável)</div>
+            <textarea id="conduta" rows="4" placeholder="A conduta gerada aparecerá aqui. Você pode editar se necessário..."></textarea>
         </div>
 
-        <!-- ANTECEDENTES FISIOLÓGICOS -->
-        <h2>🧬 ANTECEDENTES FISIOLÓGICOS</h2>
-        <div class="card-grid">
-            <div class="item-card"><input type="checkbox" id="menopausa"><label for="menopausa">Menopausa</label></div>
-            <div class="item-card"><input type="checkbox" id="reposHorm"><label for="reposHorm">Reposição Hormonal</label></div>
-            <div class="item-card">
-                <label>Menstruação:</label>
-                <select id="menstruacao">
-                    <option value="">--</option>
-                    <option>Regular</option>
-                    <option>Irregular</option>
-                </select>
-            </div>
-            <div class="item-card">
-                <label>Gestações: G</label><input type="number" id="g" class="small-input" min="0">
-                <label>P</label><input type="number" id="p" class="small-input" min="0">
-                <label>A</label><input type="number" id="a" class="small-input" min="0">
+        <!-- ANTECEDENTES FISIOLÓGICOS (visível apenas para sexo feminino) -->
+        <div id="antecedentesFeminino" style="display: none;">
+            <h2>🧬 ANTECEDENTES FISIOLÓGICOS (Feminino)</h2>
+            <div class="card-grid">
+                <div class="item-card"><input type="checkbox" id="menopausa"><label for="menopausa">Menopausa</label></div>
+                <div class="item-card"><input type="checkbox" id="reposHorm"><label for="reposHorm">Reposição Hormonal</label></div>
+                <div class="item-card">
+                    <label>Menstruação:</label>
+                    <select id="menstruacao">
+                        <option value="">--</option>
+                        <option>Regular</option>
+                        <option>Irregular</option>
+                    </select>
+                </div>
+                <div class="item-card">
+                    <label>Gestações: G</label><input type="number" id="g" class="small-input" min="0">
+                    <label>P</label><input type="number" id="p" class="small-input" min="0">
+                    <label>A</label><input type="number" id="a" class="small-input" min="0">
+                </div>
+                <div class="item-card">
+                    <label>Última menstruação:</label>
+                    <input type="text" id="dum" placeholder="data ou idade">
+                </div>
             </div>
         </div>
 
         <!-- Botões de ação -->
         <div class="footer-actions">
-            <button class="btn" onclick="gerarResumo()">📋 Gerar Resumo da Consulta</button>
-            <button class="btn success" onclick="atualizarHD()">🤖 Atualizar Sugestões</button>
+            <button class="btn" onclick="gerarResumoCompleto()">📋 Gerar Resumo da Consulta (HDA)</button>
             <button class="btn secondary" onclick="limparTudo()">🔄 Nova Consulta</button>
         </div>
-        <div id="resumoFinal" style="margin-top:30px; background:#e9f0f9; padding:20px; border-radius:12px; display:none; white-space:pre-wrap; font-family:monospace;"></div>
+        <div id="resumoFinal" style="margin-top:30px; background:#e9f0f9; padding:20px; border-radius:12px; display:none; white-space:pre-wrap; font-family: 'Segoe UI', monospace; font-size:1rem; line-height:1.6;"></div>
     </div>
 
     <script>
@@ -407,17 +443,15 @@
             {tecnico: "RAYNAUD", leigo: "Dedos das mãos/pés ficam roxos/brancos no frio"},
             {tecnico: "XEROSTOMIA", leigo: "Boca seca constante"},
             {tecnico: "XEROFTALMIA", leigo: "Olhos secos, areia nos olhos"},
-            {tecnico: "PAROTIDITE", leigo: "Inchaço nas glândulas perto do maxilar (caxumba)"},
+            {tecnico: "PAROTIDITE", leigo: "Inchaço nas glândulas perto do maxilar"},
             {tecnico: "PARESTESIAS", leigo: "Formigamento, dormência nas mãos ou pés"},
-            {tecnico: "PETÉQUIAS", leigo: "Pequenas manchas vermelhas na pele (puntiformes)"},
+            {tecnico: "PETÉQUIAS", leigo: "Pequenas manchas vermelhas na pele"},
             {tecnico: "PSORÍASE", leigo: "Manchas vermelhas com descamação na pele"},
-            {tecnico: "OUTRAS LESÕES CUTÂNEAS", leigo: "Outras manchas ou feridas na pele"},
             {tecnico: "FEBRE", leigo: "Febre sem causa aparente"},
             {tecnico: "EMAGRECIMENTO", leigo: "Perda de peso sem dieta"},
-            {tecnico: "LOMBALGIA INFLAMATÓRIA", leigo: "Dor nas costas que piora com descanso, melhora com movimento"},
-            {tecnico: "LOMBALGIA MECÂNICA", leigo: "Dor nas costas ao esforço, melhora com repouso"},
+            {tecnico: "LOMBALGIA INFLAMATÓRIA", leigo: "Dor nas costas que piora com descanso"},
+            {tecnico: "LOMBALGIA MECÂNICA", leigo: "Dor nas costas ao esforço"},
             {tecnico: "UVEÍTE", leigo: "Olho vermelho, doloroso e com fotofobia"},
-            {tecnico: "OUTRAS LESÕES OCULARES", leigo: "Outros problemas nos olhos"},
             {tecnico: "FRAQUEZA MUSCULAR", leigo: "Dificuldade para levantar braços ou pernas"},
             {tecnico: "DISPNÉIA", leigo: "Falta de ar"},
             {tecnico: "DISFAGIA", leigo: "Dificuldade para engolir"},
@@ -446,7 +480,14 @@
             { nome: "ETANERCEPTE", unidade: "mg" },
             { nome: "INFLIXIMABE", unidade: "mg/kg" },
             { nome: "RITUXIMABE", unidade: "mg" },
-            { nome: "TOCILIZUMABE", unidade: "mg" }
+            { nome: "TOCILIZUMABE", unidade: "mg" },
+            { nome: "AMITRIPTILINA", unidade: "mg/dia" },
+            { nome: "DULOXETINA", unidade: "mg/dia" },
+            { nome: "PREGANALINA", unidade: "mg/dia" },
+            { nome: "GABAPENTINA", unidade: "mg/dia" },
+            { nome: "FLUOXETINA", unidade: "mg/dia" },
+            { nome: "SERTRALINA", unidade: "mg/dia" },
+            { nome: "ESCITALOPRAM", unidade: "mg/dia" }
         ];
 
         const comorbidadesLista = [
@@ -455,8 +496,7 @@
             "Tireoidite de Hashimoto", "Síndrome de Sjögren", "Síndrome antifosfolípide",
             "Infecções urinárias de repetição", "Ansiedade", "Depressão", 
             "Sono não restaurador", "Nefrolitíase (pedra nos rins)", "Câncer (prévio)",
-            "Enxaqueca", "IAM (infarto)", "AVC", "Tabagismo", "Etilismo",
-            "Drogas ilícitas", "Drogas injetáveis"
+            "Enxaqueca", "IAM (infarto)", "AVC", "Tabagismo", "Etilismo"
         ];
 
         function gerarCheckboxes() {
@@ -491,28 +531,33 @@
             document.getElementById('medicamentos').innerHTML = htmlMed;
         }
 
-        function adicionarMedicamento() {
-            const container = document.getElementById('medicamentos');
-            const div = document.createElement('div');
-            div.className = 'item-card';
-            div.innerHTML = `
-                <input type="checkbox" class="med-check">
-                <input type="text" placeholder="Nome do medicamento" style="flex-grow:1;">
-                <input type="text" placeholder="dose" style="width:80px;">
-                <button onclick="this.parentElement.remove()" style="background:#dc3545; color:white; border:none; border-radius:4px; padding:2px 8px;">✕</button>
-            `;
-            container.appendChild(div);
-        }
-
         function calcularIMC() {
             const peso = parseFloat(document.getElementById('peso').value);
-            const altura = parseFloat(document.getElementById('altura').value) / 100; // converte cm para m
+            const altura = parseFloat(document.getElementById('altura').value) / 100;
             if (peso && altura && altura > 0) {
                 const imc = peso / (altura * altura);
                 document.getElementById('imc').innerText = imc.toFixed(2);
+                
+                // Classificação do IMC
+                let classificacao = '';
+                if (imc < 18.5) classificacao = 'Abaixo do peso';
+                else if (imc < 25) classificacao = 'Peso normal';
+                else if (imc < 30) classificacao = 'Sobrepeso';
+                else if (imc < 35) classificacao = 'Obesidade Grau I';
+                else if (imc < 40) classificacao = 'Obesidade Grau II';
+                else classificacao = 'Obesidade Grau III';
+                
+                document.getElementById('imcClass').innerText = classificacao;
             } else {
                 document.getElementById('imc').innerText = '-';
+                document.getElementById('imcClass').innerText = '';
             }
+        }
+
+        function atualizarVisibilidadeFisiologico() {
+            const sexo = document.getElementById('sexo').value;
+            const divFeminino = document.getElementById('antecedentesFeminino');
+            divFeminino.style.display = sexo === 'F' ? 'block' : 'none';
         }
 
         function atualizarHD() {
@@ -522,16 +567,15 @@
                 if (tec) sintomasSelecionados.push(tec);
             });
 
-            // Lógica de sugestão de HD baseada nos sintomas
             let sugestoes = [];
             
-            // Critérios para AR (Artrite Reumatoide)
+            // Critérios para AR
             if (sintomasSelecionados.includes('ARTRITE PEQUENAS ARTICULAÇÕES') && 
                 sintomasSelecionados.includes('RIGIDEZ MATINAL >30 MIN')) {
                 sugestoes.push("🔴 Artrite Reumatoide (provável) - considerar FAN, FR, anti-CCP");
             }
             
-            // Critérios para LES (Lúpus)
+            // Critérios para LES
             let pontosLES = 0;
             if (sintomasSelecionados.includes('RASH MALAR')) pontosLES += 2;
             if (sintomasSelecionados.includes('FOTOSSENSIBILIDADE')) pontosLES += 1;
@@ -548,11 +592,12 @@
             }
             
             // Espondiloartrites
-            if (sintomasSelecionados.includes('LOMBALGIA INFLAMATÓRIA') && 
-                (sintomasSelecionados.includes('UVEÍTE') || sintomasSelecionados.includes('PSORÍASE'))) {
-                sugestoes.push("🔵 Espondiloartrite (possível) - considerar HLA-B27, sacroilite em exames");
-            } else if (sintomasSelecionados.includes('LOMBALGIA INFLAMATÓRIA')) {
-                sugestoes.push("🔵 Espondilite Anquilosante? Investigar");
+            if (sintomasSelecionados.includes('LOMBALGIA INFLAMATÓRIA')) {
+                if (sintomasSelecionados.includes('UVEÍTE') || sintomasSelecionados.includes('PSORÍASE')) {
+                    sugestoes.push("🔵 Espondiloartrite (provável) - considerar HLA-B27");
+                } else {
+                    sugestoes.push("🔵 Espondilite Anquilosante? Investigar");
+                }
             }
             
             // Síndrome de Sjögren
@@ -560,103 +605,283 @@
                 sugestoes.push("🟢 Síndrome de Sjögren (provável) - considerar FAN, anti-Ro/La");
             }
             
-            // Fenômeno de Raynaud isolado
-            if (sintomasSelecionados.includes('RAYNAUD') && !sintomasSelecionados.includes('RASH MALAR') && pontosLES < 2) {
-                sugestoes.push("⚪ Fenômeno de Raynaud primário (se isolado, sem outras queixas)");
+            // Fenômeno de Raynaud
+            if (sintomasSelecionados.includes('RAYNAUD') && pontosLES < 2) {
+                sugestoes.push("⚪ Fenômeno de Raynaud primário (se isolado)");
             }
             
             // Vasculites
             if (sintomasSelecionados.includes('PETÉQUIAS') || sintomasSelecionados.includes('HEMATÚRIA')) {
                 sugestoes.push("🟡 Possível vasculite - considerar ANCA, biópsia");
             }
-            
-            // Febre reumática
-            if (sintomasSelecionados.includes('ARTRITE GRANDES ARTICULAÇÕES') && sintomasSelecionados.includes('FEBRE')) {
-                sugestoes.push("🟠 Febre reumática? (Critérios de Jones)");
-            }
-            
-            // Gota
-            if (sintomasSelecionados.includes('ARTRITE GRANDES ARTICULAÇÕES') && 
-                document.querySelector('#comorbidades input[value*="Gota"]')) {
-                sugestoes.push("⚫ Crise de Gota (provável) - dosar ácido úrico");
-            }
-            
-            // Fibromialgia (diagnóstico diferencial)
-            if (sintomasSelecionados.includes('CEFALÉIA') && 
-                sintomasSelecionados.includes('PARESTESIAS') &&
-                document.querySelector('#comorbidades input[value*="Fibromialgia"]')) {
-                sugestoes.push("⚪ Fibromialgia - considerar dor generalizada, pontos gatilho");
-            }
 
             let hdSugestao = document.getElementById('sugestaoHD');
             if (sugestoes.length > 0) {
                 hdSugestao.innerHTML = sugestoes.map(s => `• ${s}`).join('<br>');
             } else {
-                hdSugestao.innerHTML = '• Nenhuma hipótese específica identificada. Considere colagenose indiferenciada ou doenças mais comuns.';
+                hdSugestao.innerHTML = '• Nenhuma hipótese específica identificada. Considere colagenose indiferenciada.';
             }
 
-            atualizarConduta();
             atualizarResumo();
         }
 
-        function atualizarConduta() {
-            const hipotese = document.getElementById('hipotese').value;
-            let sugestoes = [];
+        function gerarCondutaAutomatica() {
+            const hipotese = document.getElementById('hipotese').value.toLowerCase();
+            let conduta = [];
             
-            if (hipotese.toLowerCase().includes('artrite reumatoide') || hipotese.toLowerCase().includes('ar')) {
-                sugestoes = [
-                    "🔴 Iniciar ou ajustar DMARD (Metotrexate, Leflunomida)",
-                    "🔴 Considerar corticóide em baixa dose (prednisona ≤10mg/dia) por curto período",
-                    "🔴 Avaliar necessidade de biológico se falha terapêutica",
-                    "🔴 Solicitar: FAN, FR, anti-CCP, VHS, PCR, radiografias mãos/pés",
-                    "🔴 Encaminhar à fisioterapia e terapia ocupacional"
-                ];
-            } else if (hipotese.toLowerCase().includes('lúpus') || hipotese.toLowerCase().includes('les')) {
-                sugestoes = [
-                    "🟣 Iniciar hidroxicloroquina 400mg/dia (base do tratamento)",
-                    "🟣 Avaliar necessidade de corticóide conforme atividade",
-                    "🟣 Se grave (nefrite, neurológico): considerar pulsoterapia + imunossupressor",
-                    "🟣 Solicitar: FAN, anti-DNA, C3/C4, proteinúria 24h, hemograma completo",
-                    "🟣 Proteção solar rigorosa, vacinação em dia"
-                ];
-            } else if (hipotese.toLowerCase().includes('espondilo') || hipotese.toLowerCase().includes('espondilite')) {
-                sugestoes = [
-                    "🔵 Iniciar AINE em dose plena (primeira linha)",
-                    "🔵 Se falha: considerar biológico (anti-TNF)",
-                    "🔵 Fisioterapia para manter mobilidade",
-                    "🔵 Solicitar: HLA-B27, radiografia de sacroilíacas, RM se necessário"
-                ];
-            } else if (hipotese.toLowerCase().includes('sjögren')) {
-                sugestoes = [
-                    "🟢 Lágrimas artificiais e saliva artificial",
-                    "🟢 Hidroxicloroquina para manifestações sistêmicas",
-                    "🟢 Pilocarpina se xerostomia intensa",
-                    "🟢 Solicitar: FAN, anti-Ro/La, biópsia de glândula salivar se dúvida"
-                ];
-            } else if (hipotese.toLowerCase().includes('gota')) {
-                sugestoes = [
-                    "⚫ Tratar crise: colchicina, AINE ou corticóide",
-                    "⚫ Após crise: iniciar hipouricemiante (alopurinol) se indicado",
-                    "⚫ Dieta: reduzir purinas, álcool, frutose",
-                    "⚫ Solicitar: ácido úrico sérico, uricosúria 24h"
-                ];
-            } else if (hipotese.toLowerCase().includes('fibromialgia')) {
-                sugestoes = [
-                    "⚪ Tratamento multidisciplinar",
-                    "⚪ Atividade física regular (aeróbico, alongamento)",
-                    "⚪ Medicamentos: amitriptilina, duloxetina, pregabalina",
-                    "⚪ Terapia cognitivo-comportamental"
-                ];
-            } else {
-                sugestoes = [
-                    "• Investigar conforme hipótese principal",
-                    "• Solicitar exames gerais: hemograma, VHS, PCR, FAN, FR",
-                    "• Considerar encaminhamento ao reumatologista"
-                ];
+            // Sempre incluir exames gerais
+            conduta.push("📋 EXAMES A SOLICITAR:");
+            
+            if (hipotese.includes('artrite reumatoide') || hipotese.includes('ar')) {
+                conduta.push("  • Hemograma completo, VHS, PCR");
+                conduta.push("  • Fator reumatoide, anti-CCP");
+                conduta.push("  • Radiografias de mãos, punhos e pés");
+                conduta.push("  • Ultrassom de articulações se disponível");
+                conduta.push("\n💊 TRATAMENTO:");
+                conduta.push("  • Iniciar Metotrexate (dose inicial 7.5-15mg/sem) + ácido fólico");
+                conduta.push("  • Prednisona 5-10mg/dia por curto período (ponte)");
+                conduta.push("  • Se contraindicação ao MTX: Leflunomida ou Sulfassalazina");
+                conduta.push("  • Avaliar resposta em 4-8 semanas");
+                conduta.push("\n🩹 CONDUTAS ADICIONAIS:");
+                conduta.push("  • Encaminhar à fisioterapia e TO");
+                conduta.push("  • Orientar sobre a doença e tratamento");
+                conduta.push("  • Retorno em 4 semanas para reavaliação");
+            } 
+            else if (hipotese.includes('lúpus') || hipotese.includes('les')) {
+                conduta.push("  • Hemograma completo, VHS, PCR");
+                conduta.push("  • FAN, anti-DNA, C3, C4");
+                conduta.push("  • EAS + proteinúria de 24h");
+                conduta.push("  • Função renal e hepática");
+                conduta.push("\n💊 TRATAMENTO:");
+                conduta.push("  • Hidroxicloroquina 400mg/dia (base do tratamento)");
+                conduta.push("  • Prednisona conforme atividade (dose a definir)");
+                conduta.push("  • Se nefrite: considerar pulsoterapia + imunossupressor");
+                conduta.push("\n🩹 CONDUTAS ADICIONAIS:");
+                conduta.push("  • Proteção solar rigorosa (FPS 50+, diariamente)");
+                conduta.push("  • Avaliação oftalmológica para hidroxicloroquina");
+                conduta.push("  • Vacinação em dia (exceto vacinas vivas)");
+                conduta.push("  • Retorno em 2-4 semanas");
+            }
+            else if (hipotese.includes('espondilo') || hipotese.includes('espondilite')) {
+                conduta.push("  • VHS, PCR");
+                conduta.push("  • HLA-B27");
+                conduta.push("  • Radiografia de sacroilíacas");
+                conduta.push("  • RNM de sacroilíacas se necessário");
+                conduta.push("\n💊 TRATAMENTO:");
+                conduta.push("  • AINE em dose plena (Naproxeno 500mg 12/12h ou Cetoprofeno 100mg 12/12h)");
+                conduta.push("  • Se falha após 4 semanas: considerar biológico (anti-TNF)");
+                conduta.push("\n🩹 CONDUTAS ADICIONAIS:");
+                conduta.push("  • Fisioterapia para manter mobilidade");
+                conduta.push("  • Orientar exercícios de alongamento diários");
+                conduta.push("  • Retorno em 4-6 semanas");
+            }
+            else if (hipotese.includes('sjögren')) {
+                conduta.push("  • FAN, anti-Ro/SSA, anti-La/SSB");
+                conduta.push("  • Hemograma, VHS, PCR, eletroforese de proteínas");
+                conduta.push("  • Teste de Schirmer e rosa bengala");
+                conduta.push("\n💊 TRATAMENTO:");
+                conduta.push("  • Lágrimas artificiais (sem conservantes)");
+                conduta.push("  • Saliva artificial ou pilocarpina");
+                conduta.push("  • Hidroxicloroquina para manifestações sistêmicas");
+                conduta.push("\n🩹 CONDUTAS ADICIONAIS:");
+                conduta.push("  • Higiene oral rigorosa");
+                conduta.push("  • Evitar medicamentos anticolinérgicos");
+                conduta.push("  • Retorno em 2-3 meses");
+            }
+            else if (hipotese.includes('gota')) {
+                conduta.push("  • Ácido úrico sérico");
+                conduta.push("  • Urinálise, função renal");
+                conduta.push("  • Líquido sinovial se articulação com derrame");
+                conduta.push("\n💊 TRATAMENTO:");
+                conduta.push("  • Crise aguda: Colchicina 0,5mg 8/8h ou AINE");
+                conduta.push("  • Após crise: Alopurinol 100mg/dia (ajustar conforme uricemia)");
+                conduta.push("  • Orientar profilaxia com colchicina nos primeiros meses");
+                conduta.push("\n🩹 CONDUTAS ADICIONAIS:");
+                conduta.push("  • Dieta: reduzir purinas, álcool, frutose");
+                conduta.push("  • Hidratação adequada");
+                conduta.push("  • Retorno em 4 semanas");
+            }
+            else if (hipotese.includes('fibromialgia')) {
+                conduta.push("  • Diagnóstico clínico (critérios ACR 2016)");
+                conduta.push("  • Descartar doenças associadas (hemograma, VHS, TSH, vitamina D)");
+                conduta.push("\n💊 TRATAMENTO:");
+                conduta.push("  • Amitriptilina 12.5-25mg ao deitar");
+                conduta.push("  • Ou Duloxetina 30-60mg/dia");
+                conduta.push("  • Ou Pregabalina 75-150mg 12/12h");
+                conduta.push("\n🩹 CONDUTAS ADICIONAIS:");
+                conduta.push("  • Atividade física regular (aeróbico, alongamento)");
+                conduta.push("  • Terapia cognitivo-comportamental");
+                conduta.push("  • Higiene do sono");
+                conduta.push("  • Retorno em 4-6 semanas");
+            }
+            else {
+                conduta.push("  • Hemograma completo, VHS, PCR");
+                conduta.push("  • FAN, FR");
+                conduta.push("  • Função renal e hepática");
+                conduta.push("  • Exames conforme hipótese clínica");
+                conduta.push("\n💊 TRATAMENTO:");
+                conduta.push("  • Aguardar definição diagnóstica");
+                conduta.push("  • Tratamento sintomático se necessário");
+                conduta.push("\n🩹 CONDUTAS ADICIONAIS:");
+                conduta.push("  • Orientar retorno em 2-4 semanas com exames");
+                conduta.push("  • Considerar encaminhamento ao reumatologista");
             }
             
-            document.getElementById('sugestaoConduta').innerHTML = sugestoes.map(s => `• ${s}`).join('<br>');
-            document.getElementById('resumoHD').innerText = hipotese.substring(0,30) + (hipotese.length>30?'...':'') || '—';
+            document.getElementById('condutaGerada').innerText = conduta.join('\n');
+            document.getElementById('conduta').value = conduta.join('\n');
+        }
+
+        function gerarResumoCompleto() {
+            let texto = [];
+            
+            // Dados do paciente
+            const sexo = document.getElementById('sexo').value;
+            const idade = document.getElementById('idade').value;
+            const raca = document.getElementById('raca').value;
+            
+            let pacienteDesc = "Paciente";
+            if (sexo === 'F') pacienteDesc += " do sexo feminino";
+            else if (sexo === 'M') pacienteDesc += " do sexo masculino";
+            
+            if (raca) pacienteDesc += `, ${raca.toLowerCase()}`;
+            if (idade) pacienteDesc += `, ${idade} anos`;
+            
+            // IMC
+            const peso = document.getElementById('peso').value;
+            const altura = document.getElementById('altura').value;
+            const imc = document.getElementById('imc').innerText;
+            const imcClass = document.getElementById('imcClass').innerText;
+            
+            if (peso && altura) {
+                pacienteDesc += `, peso ${peso}kg, altura ${altura}cm, IMC ${imc} (${imcClass})`;
+            }
+            
+            texto.push(pacienteDesc + ", vem à consulta queixando-se de:\n");
+            
+            // Queixa principal
+            const queixa = document.getElementById('queixaPrincipal').value.trim();
+            if (queixa) {
+                texto.push(queixa);
+            } else {
+                texto.push("queixa principal não especificada");
+            }
+            texto.push("\n");
+            
+            // Sintomas positivos (HDA)
+            const sintomasPositivos = [];
+            document.querySelectorAll('#sinais input:checked').forEach(cb => {
+                const label = cb.parentElement.querySelector('label').innerText;
+                sintomasPositivos.push(label.toLowerCase());
+            });
+            
+            if (sintomasPositivos.length > 0) {
+                texto.push("Refere ");
+                if (sintomasPositivos.length === 1) {
+                    texto.push(sintomasPositivos[0] + ".");
+                } else {
+                    texto.push(sintomasPositivos.slice(0, -1).join(", ") + " e " + sintomasPositivos.slice(-1) + ".");
+                }
+                texto.push("\n");
+            }
+            
+            // Antecedentes fisiológicos (apenas feminino)
+            if (sexo === 'F') {
+                const menopausa = document.getElementById('menopausa').checked;
+                const reposHorm = document.getElementById('reposHorm').checked;
+                const menstruacao = document.getElementById('menstruacao').value;
+                const g = document.getElementById('g').value;
+                const p = document.getElementById('p').value;
+                const a = document.getElementById('a').value;
+                const dum = document.getElementById('dum').value;
+                
+                let antecedentes = [];
+                if (menopausa) antecedentes.push("menopausa");
+                if (reposHorm) antecedentes.push("reposição hormonal");
+                if (menstruacao) antecedentes.push(`menstruação ${menstruacao.toLowerCase()}`);
+                if (g || p || a) antecedentes.push(`G${g || '0'}P${p || '0'}A${a || '0'}`);
+                if (dum) antecedentes.push(`DUM: ${dum}`);
+                
+                if (antecedentes.length > 0) {
+                    texto.push("\nAntecedentes ginecológicos: " + antecedentes.join(", ") + ".\n");
+                }
+            }
+            
+            // Medicamentos em uso
+            const medicamentos = [];
+            document.querySelectorAll('#medicamentos .item-card').forEach(card => {
+                const cb = card.querySelector('input[type="checkbox"]');
+                if (cb && cb.checked) {
+                    let nome = card.querySelector('label')?.innerText || '';
+                    const dose = card.querySelector('.med-dose, input[type="text"]')?.value;
+                    const via = card.querySelector('select')?.value;
+                    if (nome) {
+                        let txt = nome;
+                        if (via) txt += ` ${via}`;
+                        if (dose) txt += ` ${dose}`;
+                        medicamentos.push(txt.toLowerCase());
+                    }
+                }
+            });
+            
+            if (medicamentos.length > 0) {
+                texto.push("\nEm uso de: " + medicamentos.join(", ") + ".\n");
+            }
+            
+            // Comorbidades
+            const comorbidades = [];
+            document.querySelectorAll('#comorbidades input:checked').forEach(cb => {
+                const label = cb.parentElement.querySelector('label').innerText;
+                comorbidades.push(label.toLowerCase());
+            });
+            
+            if (comorbidades.length > 0) {
+                texto.push("\nComorbidades: " + comorbidades.join(", ") + ".\n");
+            }
+            
+            // Exame físico
+            const pa = document.getElementById('pa').value;
+            const fc = document.getElementById('fc').value;
+            const fr = document.getElementById('fr').value;
+            const temp = document.getElementById('temp').value;
+            const sat = document.getElementById('sat').value;
+            const ac = document.getElementById('ac').value;
+            const ap = document.getElementById('ap').value;
+            const abdome = document.getElementById('abdome').value;
+            const extrem = document.getElementById('extrem').value;
+            
+            texto.push("\n📋 EXAME FÍSICO:");
+            let efLinha = "";
+            if (pa) efLinha += `PA: ${pa}, `;
+            if (fc) efLinha += `FC: ${fc} bpm, `;
+            if (fr) efLinha += `FR: ${fr} irpm, `;
+            if (temp) efLinha += `Temp: ${temp}°C, `;
+            if (sat) efLinha += `Sat: ${sat}%, `;
+            texto.push(efLinha.replace(/, $/, ''));
+            
+            if (ac) texto.push(`AC: ${ac}`);
+            if (ap) texto.push(`AP: ${ap}`);
+            if (abdome) texto.push(`Abdome: ${abdome}`);
+            if (extrem) texto.push(`Extremidades: ${extrem}`);
+            texto.push("");
+            
+            // Hipótese diagnóstica
+            const hipotese = document.getElementById('hipotese').value;
+            if (hipotese) {
+                texto.push("\n🔍 HIPÓTESE DIAGNÓSTICA:");
+                texto.push(hipotese);
+                texto.push("");
+            }
+            
+            // Conduta
+            const conduta = document.getElementById('conduta').value;
+            if (conduta) {
+                texto.push("\n📋 CONDUTA:");
+                texto.push(conduta);
+            }
+            
+            const resumoDiv = document.getElementById('resumoFinal');
+            resumoDiv.style.display = 'block';
+            resumoDiv.innerText = texto.join('\n');
         }
 
         function toggleAll(sectionId, check) {
@@ -676,87 +901,20 @@
             document.getElementById('resumoHD').innerText = hipotese.substring(0,20) + (hipotese.length>20?'...':'') || '—';
         }
 
-        function gerarResumo() {
-            let linhas = [];
-            linhas.push('==== RESUMO DA CONSULTA ====\n');
-            
-            // Dados do paciente
-            linhas.push('📋 DADOS DO PACIENTE:');
-            linhas.push(`Sexo: ${document.getElementById('sexo').value || 'Não informado'}`);
-            linhas.push(`Idade: ${document.getElementById('idade').value || 'Não informada'} anos`);
-            linhas.push(`Peso: ${document.getElementById('peso').value || 'Não informado'} kg`);
-            linhas.push(`Altura: ${document.getElementById('altura').value || 'Não informada'} cm`);
-            linhas.push(`IMC: ${document.getElementById('imc').innerText}\n`);
-            
-            linhas.push('🗣️ QUEIXA PRINCIPAL:');
-            linhas.push(document.getElementById('queixaPrincipal').value || 'Não informada\n');
-            
-            linhas.push('🔍 SINAIS E SINTOMAS POSITIVOS:');
-            let sintomas = [];
-            document.querySelectorAll('#sinais input:checked').forEach(cb => {
-                sintomas.push(cb.parentElement.querySelector('label').innerText);
-            });
-            linhas.push(sintomas.join('; ') || 'Nenhum\n');
-            
-            linhas.push('\n💊 MEDICAMENTOS EM USO:');
-            let meds = [];
-            document.querySelectorAll('#medicamentos .item-card').forEach(card => {
-                const cb = card.querySelector('input[type="checkbox"]');
-                if (cb && cb.checked) {
-                    let nome = card.querySelector('label')?.innerText || card.querySelector('input[type="text"]')?.value || '';
-                    const dose = card.querySelector('.med-dose, input[type="text"]:not([placeholder*="Nome"])')?.value;
-                    const via = card.querySelector('select')?.value;
-                    if (nome) {
-                        let txt = nome;
-                        if (via) txt += ' ' + via;
-                        if (dose) txt += ' ' + dose;
-                        meds.push(txt);
-                    }
-                }
-            });
-            linhas.push(meds.join('; ') || 'Nenhum\n');
-            
-            linhas.push('\n📋 COMORBIDADES:');
-            let com = [];
-            document.querySelectorAll('#comorbidades input:checked').forEach(cb => {
-                com.push(cb.parentElement.querySelector('label').innerText);
-            });
-            linhas.push(com.join('; ') || 'Nenhuma\n');
-            
-            linhas.push('\n🩻 EXAME FÍSICO:');
-            linhas.push(`PA: ${document.getElementById('pa').value || 'N/I'}, FC: ${document.getElementById('fc').value || 'N/I'}`);
-            linhas.push(`AC: ${document.getElementById('ac').value || 'N/I'}`);
-            linhas.push(`AP: ${document.getElementById('ap').value || 'N/I'}`);
-            linhas.push(`Abdome: ${document.getElementById('abdome').value || 'N/I'}`);
-            linhas.push(`Extremidades: ${document.getElementById('extrem').value || 'N/I'}\n`);
-            
-            linhas.push('🤖 HIPÓTESE DIAGNÓSTICA:');
-            linhas.push(document.getElementById('hipotese').value || 'Não informada\n');
-            
-            linhas.push('📝 CONDUTA:');
-            linhas.push(document.getElementById('conduta').value || 'Não informada\n');
-            
-            linhas.push('\n🧬 ANTECEDENTES FISIOLÓGICOS:');
-            if(document.getElementById('menopausa').checked) linhas.push('Menopausa');
-            if(document.getElementById('reposHorm').checked) linhas.push('Reposição Hormonal');
-            linhas.push(`Menstruação: ${document.getElementById('menstruacao').value || 'N/I'}`);
-            linhas.push(`G:${document.getElementById('g').value || '0'} P:${document.getElementById('p').value || '0'} A:${document.getElementById('a').value || '0'}`);
-
-            const resumoDiv = document.getElementById('resumoFinal');
-            resumoDiv.style.display = 'block';
-            resumoDiv.innerText = linhas.join('\n');
-        }
-
         function limparTudo() {
             document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
             document.querySelectorAll('input[type="text"], input[type="number"], select, textarea').forEach(field => field.value = '');
             document.getElementById('sexo').value = '';
+            document.getElementById('raca').value = '';
             document.getElementById('menstruacao').value = '';
             document.getElementById('imc').innerText = '-';
+            document.getElementById('imcClass').innerText = '';
             atualizarMedicamentos();
             atualizarHD();
             atualizarResumo();
             document.getElementById('resumoFinal').style.display = 'none';
+            document.getElementById('antecedentesFeminino').style.display = 'none';
+            document.getElementById('condutaGerada').innerText = 'Clique em "Gerar Conduta Automática" após definir a hipótese...';
         }
 
         // Inicialização e listeners
@@ -769,7 +927,7 @@
             document.addEventListener('input', () => {
                 atualizarResumo();
                 if (event.target.id === 'hipotese') {
-                    atualizarConduta();
+                    // Não gera automático, só quando clicar no botão
                 }
             });
         };
