@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anamnese Reumatologia - HDA Cronológica</title>
+    <title>Anamnese Reumatologia - Completa</title>
     <style>
         * {
             box-sizing: border-box;
@@ -52,7 +52,7 @@
         }
         .card-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
             gap: 12px;
             background: #d9e6f2;
             padding: 15px;
@@ -70,26 +70,27 @@
         .item-card:hover {
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
-        .sintoma-header {
+        .item-header {
             display: flex;
             align-items: center;
             gap: 12px;
             margin-bottom: 8px;
+            flex-wrap: wrap;
         }
-        .sintoma-header input[type="checkbox"] {
+        .item-header input[type="checkbox"] {
             width: 20px;
             height: 20px;
             cursor: pointer;
             accent-color: #1e4a76;
         }
-        .sintoma-header label {
+        .item-header label {
             font-weight: 600;
             cursor: pointer;
             flex-grow: 1;
             color: #0a2942;
             font-size: 0.95rem;
         }
-        .tempo-sintoma {
+        .tempo-controle {
             margin-left: 32px;
             display: flex;
             align-items: center;
@@ -97,15 +98,16 @@
             font-size: 0.9rem;
             color: #1e4a76;
             padding: 5px 0;
+            flex-wrap: wrap;
         }
-        .tempo-sintoma input {
+        .tempo-controle input {
             border: 1px solid #b0c8da;
             border-radius: 4px;
             padding: 4px 8px;
-            width: 120px;
+            width: 70px;
             font-size: 0.9rem;
         }
-        .tempo-sintoma select {
+        .tempo-controle select {
             border: 1px solid #b0c8da;
             border-radius: 4px;
             padding: 4px;
@@ -117,6 +119,12 @@
             gap: 8px;
             align-items: center;
             width: 100%;
+            margin-top: 5px;
+        }
+        .med-group input, .med-group select {
+            border: 1px solid #b0c8da;
+            border-radius: 4px;
+            padding: 4px 8px;
         }
         .double-col {
             grid-column: span 2;
@@ -211,12 +219,24 @@
             border-radius: 6px;
             font-size: 0.95rem;
         }
-        .imc-result {
+        .imc-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .imc-valor {
             background: #e8f4fd;
             padding: 6px 12px;
             border-radius: 20px;
             font-weight: bold;
             font-size: 0.9rem;
+            text-align: center;
+        }
+        .imc-classificacao {
+            font-size: 0.8rem;
+            color: #1e4a76;
+            text-align: center;
+            font-weight: 500;
         }
         .hd-box {
             background: white;
@@ -239,20 +259,11 @@
             margin: 5px 0;
             border-left: 3px solid #ffc107;
         }
-        .conduta-gerada {
-            background: #e8f4fd;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 10px;
-            white-space: pre-wrap;
-            border: 1px solid #4a90e2;
-            font-size: 0.95rem;
-        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🩺 Anamnese Reumatologia - HDA Cronológica</h1>
+        <h1>🩺 Anamnese Reumatologia - Completa</h1>
 
         <!-- Dados do Paciente -->
         <div class="paciente-info">
@@ -289,13 +300,16 @@
             </div>
             <div class="info-field">
                 <label>IMC:</label>
-                <div class="imc-result" id="imc">-</div>
+                <div class="imc-container">
+                    <div class="imc-valor" id="imc">-</div>
+                    <div class="imc-classificacao" id="imcClass"></div>
+                </div>
             </div>
         </div>
 
         <!-- Resumo -->
         <div class="resumo-bar">
-            <span><span class="badge" id="totalMarcados">0</span> sintomas marcados</span>
+            <span><span class="badge" id="totalMarcados">0</span> itens marcados</span>
             <span>📌 <span id="resumoQueixa" style="font-weight:600;">—</span></span>
         </div>
 
@@ -309,11 +323,11 @@
         <h2>🔍 SINAIS E SINTOMAS <button onclick="toggleAll('sinais', true)">Marcar todos</button><button onclick="toggleAll('sinais', false)">Limpar</button></h2>
         <div class="card-grid" id="sinais"></div>
 
-        <!-- MEDICAMENTOS -->
+        <!-- MEDICAMENTOS EM USO (com imunobiológicos) -->
         <h2>💊 MEDICAMENTOS EM USO</h2>
         <div class="card-grid" id="medicamentos"></div>
 
-        <!-- COMORBIDADES -->
+        <!-- COMORBIDADES (com tempo de diagnóstico) -->
         <h2>📋 COMORBIDADES</h2>
         <div class="card-grid" id="comorbidades"></div>
 
@@ -357,20 +371,34 @@
         <div id="antecedentesFeminino" style="display: none;">
             <h2>🧬 ANTECEDENTES (Feminino)</h2>
             <div class="card-grid">
-                <div class="item-card"><input type="checkbox" id="menopausa"><label>Menopausa</label></div>
-                <div class="item-card"><input type="checkbox" id="reposHorm"><label>Reposição Hormonal</label></div>
                 <div class="item-card">
-                    <label>Menstruação:</label>
-                    <select id="menstruacao">
-                        <option value="">--</option>
-                        <option>Regular</option>
-                        <option>Irregular</option>
-                    </select>
+                    <div class="item-header">
+                        <input type="checkbox" id="menopausa">
+                        <label for="menopausa">Menopausa</label>
+                    </div>
                 </div>
                 <div class="item-card">
-                    <label>G:</label><input type="number" id="g" style="width:50px;">
-                    <label>P:</label><input type="number" id="p" style="width:50px;">
-                    <label>A:</label><input type="number" id="a" style="width:50px;">
+                    <div class="item-header">
+                        <input type="checkbox" id="reposHorm">
+                        <label for="reposHorm">Reposição Hormonal</label>
+                    </div>
+                </div>
+                <div class="item-card">
+                    <div class="item-header">
+                        <label>Menstruação:</label>
+                        <select id="menstruacao">
+                            <option value="">--</option>
+                            <option>Regular</option>
+                            <option>Irregular</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="item-card">
+                    <div class="item-header">
+                        <label>G:</label><input type="number" id="g" style="width:50px;">
+                        <label>P:</label><input type="number" id="p" style="width:50px;">
+                        <label>A:</label><input type="number" id="a" style="width:50px;">
+                    </div>
                 </div>
             </div>
         </div>
@@ -433,27 +461,43 @@
             { nome: "AMITRIPTILINA", unidade: "mg/dia" },
             { nome: "DULOXETINA", unidade: "mg/dia" },
             { nome: "PREGANALINA", unidade: "mg/dia" },
-            { nome: "GABAPENTINA", unidade: "mg/dia" }
+            { nome: "GABAPENTINA", unidade: "mg/dia" },
+            // Imunobiológicos
+            { nome: "ADALIMUMABE (Humira)", unidade: "mg" },
+            { nome: "ETANERCEPTE (Enbrel)", unidade: "mg" },
+            { nome: "INFLIXIMABE (Remicade)", unidade: "mg/kg" },
+            { nome: "GOLIMUMABE (Simponi)", unidade: "mg" },
+            { nome: "CERTOLIZUMABE (Cimzia)", unidade: "mg" },
+            { nome: "RITUXIMABE (MabThera)", unidade: "mg" },
+            { nome: "TOCILIZUMABE (Actemra)", unidade: "mg" },
+            { nome: "ABATACEPTE (Orencia)", unidade: "mg" },
+            { nome: "SECUQUINUMABE (Cosentyx)", unidade: "mg" },
+            { nome: "USTEQUINUMABE (Stelara)", unidade: "mg" },
+            { nome: "BELIMUMABE (Benlysta)", unidade: "mg" }
         ];
 
         const comorbidadesLista = [
-            "HAS", "DM", "Dislipidemia", "Osteoporose", "Artrose", "Gota", 
-            "Fibromialgia", "Hipotireoidismo", "Ansiedade", "Depressão", 
-            "Tabagismo", "Etilismo"
+            "HAS (Hipertensão)", "DM (Diabetes)", "Dislipidemia", "Osteoporose", 
+            "Artrose", "Gota", "Fibromialgia", "Hipotireoidismo", "Ansiedade", 
+            "Depressão", "Tabagismo", "Etilismo", "Asma", "DPOC", "ICC",
+            "Doença arterial coronariana", "AVC prévio", "Trombose venosa",
+            "Doença renal crônica", "Hepatopatia", "HIV", "Hepatite B", "Hepatite C",
+            "Tuberculose (prévia)", "Neoplasia (prévia)"
         ];
 
         function gerarCheckboxes() {
+            // Sintomas
             let htmlSinais = '';
-            sintomasLista.forEach((s, index) => {
+            sintomasLista.forEach((s) => {
                 htmlSinais += `
-                    <div class="item-card" data-index="${index}">
-                        <div class="sintoma-header">
+                    <div class="item-card">
+                        <div class="item-header">
                             <input type="checkbox" class="sinal" data-tecnico="${s.tecnico}" onchange="toggleTempoSintoma(this)">
                             <label title="${s.tecnico}">${s.leigo}</label>
                         </div>
-                        <div class="tempo-sintoma" style="display: none;">
+                        <div class="tempo-controle" style="display: none;">
                             <span>Há:</span>
-                            <input type="number" class="tempo-valor" min="0" step="1" placeholder="número" style="width:70px;">
+                            <input type="number" class="tempo-valor" min="0" step="1" placeholder="nº">
                             <select class="tempo-unidade">
                                 <option value="dias">dias</option>
                                 <option value="semanas">semanas</option>
@@ -466,30 +510,49 @@
             });
             document.getElementById('sinais').innerHTML = htmlSinais;
 
+            // Medicamentos (incluindo imunobiológicos)
             let htmlMed = '';
             medicamentosBase.forEach(m => {
                 htmlMed += `<div class="item-card">`;
+                htmlMed += `<div class="item-header">`;
                 htmlMed += `<input type="checkbox" class="med-check">`;
                 htmlMed += `<label>${m.nome}</label>`;
+                htmlMed += `</div>`;
                 htmlMed += `<div class="med-group">`;
                 if (m.opcoes) {
                     htmlMed += `<select class="med-via"><option>${m.opcoes.join('</option><option>')}</option></select>`;
                 }
-                htmlMed += `<input type="text" class="med-dose" placeholder="dose (${m.unidade})" style="width:100px;">`;
+                htmlMed += `<input type="text" class="med-dose" placeholder="dose (${m.unidade})" style="width:120px;">`;
                 htmlMed += `</div></div>`;
             });
             document.getElementById('medicamentos').innerHTML = htmlMed;
 
+            // Comorbidades (com tempo de diagnóstico)
             let htmlComorb = '';
             comorbidadesLista.forEach(c => {
-                htmlComorb += `<div class="item-card"><input type="checkbox"><label>${c}</label></div>`;
+                htmlComorb += `
+                    <div class="item-card">
+                        <div class="item-header">
+                            <input type="checkbox" class="comorb" onchange="toggleTempoComorb(this)">
+                            <label>${c}</label>
+                        </div>
+                        <div class="tempo-controle" style="display: none;">
+                            <span>Diagnóstico há:</span>
+                            <input type="number" class="tempo-valor" min="0" step="1" placeholder="nº">
+                            <select class="tempo-unidade">
+                                <option value="meses">meses</option>
+                                <option value="anos">anos</option>
+                            </select>
+                        </div>
+                    </div>
+                `;
             });
             document.getElementById('comorbidades').innerHTML = htmlComorb;
         }
 
         function toggleTempoSintoma(checkbox) {
             const itemCard = checkbox.closest('.item-card');
-            const tempoDiv = itemCard.querySelector('.tempo-sintoma');
+            const tempoDiv = itemCard.querySelector('.tempo-controle');
             tempoDiv.style.display = checkbox.checked ? 'flex' : 'none';
             if (!checkbox.checked) {
                 tempoDiv.querySelector('.tempo-valor').value = '';
@@ -498,14 +561,35 @@
             atualizarHD();
         }
 
+        function toggleTempoComorb(checkbox) {
+            const itemCard = checkbox.closest('.item-card');
+            const tempoDiv = itemCard.querySelector('.tempo-controle');
+            tempoDiv.style.display = checkbox.checked ? 'flex' : 'none';
+            if (!checkbox.checked) {
+                tempoDiv.querySelector('.tempo-valor').value = '';
+            }
+            atualizarResumo();
+        }
+
         function calcularIMC() {
             const peso = parseFloat(document.getElementById('peso').value);
             const altura = parseFloat(document.getElementById('altura').value) / 100;
-            if (peso && altura) {
+            if (peso && altura && altura > 0) {
                 const imc = peso / (altura * altura);
                 document.getElementById('imc').innerText = imc.toFixed(2);
+                
+                let classificacao = '';
+                if (imc < 18.5) classificacao = 'Abaixo do peso';
+                else if (imc < 25) classificacao = 'Peso normal';
+                else if (imc < 30) classificacao = 'Sobrepeso';
+                else if (imc < 35) classificacao = 'Obesidade Grau I';
+                else if (imc < 40) classificacao = 'Obesidade Grau II';
+                else classificacao = 'Obesidade Grau III';
+                
+                document.getElementById('imcClass').innerText = classificacao;
             } else {
                 document.getElementById('imc').innerText = '-';
+                document.getElementById('imcClass').innerText = '';
             }
         }
 
@@ -562,14 +646,24 @@
             
             if (hipoteseDiv.includes('Artrite Reumatoide')) {
                 conduta.push("• Anti-CCP, radiografias de mãos e pés");
+                conduta.push("• Ultrassom de articulações");
                 conduta.push("\n💊 TRATAMENTO:");
                 conduta.push("• Metotrexate 7.5-15mg/sem + ácido fólico");
                 conduta.push("• Prednisona 5-10mg/dia se necessário");
+                conduta.push("• Se falha: considerar biológico (anti-TNF)");
             } else if (hipoteseDiv.includes('Lúpus')) {
                 conduta.push("• Anti-DNA, C3, C4, proteinúria 24h");
+                conduta.push("• EAS, função renal");
                 conduta.push("\n💊 TRATAMENTO:");
                 conduta.push("• Hidroxicloroquina 400mg/dia");
                 conduta.push("• Prednisona conforme atividade");
+                conduta.push("• Proteção solar rigorosa");
+            } else if (hipoteseDiv.includes('Espondiloartrite')) {
+                conduta.push("• HLA-B27");
+                conduta.push("• Radiografia de sacroilíacas");
+                conduta.push("\n💊 TRATAMENTO:");
+                conduta.push("• AINE em dose plena");
+                conduta.push("• Se falha: considerar biológico (anti-TNF)");
             } else {
                 conduta.push("\n💊 TRATAMENTO:");
                 conduta.push("• Tratamento sintomático conforme hipótese");
@@ -588,16 +682,23 @@
             const sexo = document.getElementById('sexo').value;
             const idade = document.getElementById('idade').value;
             const raca = document.getElementById('raca').value;
+            const peso = document.getElementById('peso').value;
+            const altura = document.getElementById('altura').value;
+            const imc = document.getElementById('imc').innerText;
+            const imcClass = document.getElementById('imcClass').innerText;
             
             let pacienteDesc = "Paciente";
-            if (sexo === 'F') pacienteDesc += " feminino";
-            else if (sexo === 'M') pacienteDesc += " masculino";
+            if (sexo === 'F') pacienteDesc += " do sexo feminino";
+            else if (sexo === 'M') pacienteDesc += " do sexo masculino";
             if (raca) pacienteDesc += `, ${raca.toLowerCase()}`;
             if (idade) pacienteDesc += `, ${idade} anos`;
+            if (peso && altura) {
+                pacienteDesc += `, peso ${peso}kg, altura ${altura}cm, IMC ${imc} (${imcClass})`;
+            }
             
             hda.push(pacienteDesc + ", " + (document.getElementById('queixaPrincipal').value || "sem queixa principal registrada") + "\n");
             
-            // Coletar sintomas com tempo
+            // Sintomas com tempo
             let sintomasComTempo = [];
             document.querySelectorAll('#sinais .item-card').forEach(card => {
                 const checkbox = card.querySelector('.sinal');
@@ -608,22 +709,22 @@
                     
                     if (tempoValor && tempoUnidade) {
                         sintomasComTempo.push({
-                            sintoma: sintoma,
+                            item: sintoma,
                             tempo: parseInt(tempoValor),
                             unidade: tempoUnidade
+                        });
+                    } else {
+                        sintomasComTempo.push({
+                            item: sintoma,
+                            tempo: 999999,
+                            unidade: 'dias'
                         });
                     }
                 }
             });
             
-            // Ordenar por tempo (do mais antigo para o mais recente)
             const tempoEmDias = (item) => {
-                const dias = {
-                    'dias': 1,
-                    'semanas': 7,
-                    'meses': 30,
-                    'anos': 365
-                };
+                const dias = {'dias':1, 'semanas':7, 'meses':30, 'anos':365};
                 return item.tempo * (dias[item.unidade] || 1);
             };
             
@@ -632,9 +733,12 @@
             if (sintomasComTempo.length > 0) {
                 hda.push("\n📅 HISTÓRIA CRONOLÓGICA DOS SINTOMAS:");
                 sintomasComTempo.forEach(item => {
-                    hda.push(`• ${item.sintoma} - há ${item.tempo} ${item.unidade}`);
+                    if (item.tempo === 999999) {
+                        hda.push(`• ${item.item} (tempo não especificado)`);
+                    } else {
+                        hda.push(`• ${item.item} - há ${item.tempo} ${item.unidade}`);
+                    }
                 });
-                hda.push("");
             }
             
             // Medicamentos
@@ -657,23 +761,62 @@
                 hda.push(medicamentos.join('; '));
             }
             
-            // Comorbidades
+            // Comorbidades com tempo
             const comorbidades = [];
-            document.querySelectorAll('#comorbidades input:checked').forEach(cb => {
-                comorbidades.push(cb.parentElement.querySelector('label').innerText);
+            document.querySelectorAll('#comorbidades .item-card').forEach(card => {
+                const cb = card.querySelector('input[type="checkbox"]');
+                if (cb && cb.checked) {
+                    let nome = card.querySelector('label').innerText;
+                    const tempoValor = card.querySelector('.tempo-valor')?.value;
+                    const tempoUnidade = card.querySelector('.tempo-unidade')?.value;
+                    
+                    if (tempoValor && tempoUnidade) {
+                        comorbidades.push(`${nome} (diagnóstico há ${tempoValor} ${tempoUnidade})`);
+                    } else {
+                        comorbidades.push(nome);
+                    }
+                }
             });
             
             if (comorbidades.length > 0) {
                 hda.push("\n📋 COMORBIDADES:");
-                hda.push(comorbidades.join(', '));
+                hda.push(comorbidades.join('; '));
+            }
+            
+            // Antecedentes feminino
+            if (sexo === 'F') {
+                let antecedentes = [];
+                if (document.getElementById('menopausa').checked) antecedentes.push("menopausa");
+                if (document.getElementById('reposHorm').checked) antecedentes.push("reposição hormonal");
+                if (document.getElementById('menstruacao').value) antecedentes.push(`menstruação ${document.getElementById('menstruacao').value.toLowerCase()}`);
+                
+                const g = document.getElementById('g').value;
+                const p = document.getElementById('p').value;
+                const a = document.getElementById('a').value;
+                if (g || p || a) antecedentes.push(`G${g || '0'}P${p || '0'}A${a || '0'}`);
+                
+                if (antecedentes.length > 0) {
+                    hda.push("\n🧬 ANTECEDENTES GINECOLÓGICOS:");
+                    hda.push(antecedentes.join(', '));
+                }
             }
             
             // Exame físico
             hda.push("\n🩻 EXAME FÍSICO:");
-            hda.push(`PA: ${document.getElementById('pa').value || 'N/I'}, FC: ${document.getElementById('fc').value || 'N/I'}, FR: ${document.getElementById('fr').value || 'N/I'}`);
-            hda.push(`AC: ${document.getElementById('ac').value || 'N/I'}`);
-            hda.push(`AP: ${document.getElementById('ap').value || 'N/I'}`);
-            hda.push(`Extremidades: ${document.getElementById('extrem').value || 'N/I'}`);
+            const pa = document.getElementById('pa').value || 'N/I';
+            const fc = document.getElementById('fc').value || 'N/I';
+            const fr = document.getElementById('fr').value || 'N/I';
+            const temp = document.getElementById('temp').value || 'N/I';
+            hda.push(`PA: ${pa}, FC: ${fc} bpm, FR: ${fr} irpm, Temp: ${temp}°C`);
+            
+            const ac = document.getElementById('ac').value;
+            if (ac) hda.push(`AC: ${ac}`);
+            
+            const ap = document.getElementById('ap').value;
+            if (ap) hda.push(`AP: ${ap}`);
+            
+            const extrem = document.getElementById('extrem').value;
+            if (extrem) hda.push(`Extremidades: ${extrem}`);
             
             // Hipótese
             hda.push("\n🔍 HIPÓTESE DIAGNÓSTICA:");
@@ -692,18 +835,16 @@
             const container = document.getElementById(sectionId);
             container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
                 cb.checked = check;
-                if (sectionId === 'sinais') {
-                    const card = cb.closest('.item-card');
-                    const tempoDiv = card?.querySelector('.tempo-sintoma');
-                    if (tempoDiv) tempoDiv.style.display = check ? 'flex' : 'none';
-                }
+                const card = cb.closest('.item-card');
+                const tempoDiv = card?.querySelector('.tempo-controle');
+                if (tempoDiv) tempoDiv.style.display = check ? 'flex' : 'none';
             });
             atualizarResumo();
-            atualizarHD();
+            if (sectionId === 'sinais') atualizarHD();
         }
 
         function atualizarResumo() {
-            const total = document.querySelectorAll('#sinais input[type="checkbox"]:checked').length;
+            const total = document.querySelectorAll('input[type="checkbox"]:checked').length;
             document.getElementById('totalMarcados').innerText = total;
             const queixa = document.getElementById('queixaPrincipal').value.trim();
             document.getElementById('resumoQueixa').innerText = queixa.substring(0, 30) + (queixa.length > 30 ? '...' : '') || '—';
@@ -711,11 +852,13 @@
 
         function limparTudo() {
             document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
-            document.querySelectorAll('.tempo-sintoma').forEach(div => div.style.display = 'none');
+            document.querySelectorAll('.tempo-controle').forEach(div => div.style.display = 'none');
             document.querySelectorAll('input[type="text"], input[type="number"], select, textarea').forEach(field => field.value = '');
             document.getElementById('sexo').value = '';
             document.getElementById('raca').value = '';
+            document.getElementById('menstruacao').value = '';
             document.getElementById('imc').innerText = '-';
+            document.getElementById('imcClass').innerText = '';
             atualizarResumo();
             atualizarHD();
             document.getElementById('resumoFinal').style.display = 'none';
